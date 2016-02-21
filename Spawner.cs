@@ -24,7 +24,6 @@ public struct RandomInt
 
 public class Spawner : MonoBehaviour
 {
-
     public GameObject monster1;
     public GameObject monster2;
     public GameObject jewels;
