@@ -37,6 +37,8 @@ public class MapGenerator : MonoBehaviour
     public Sprite[] mapSprites;
     private Dictionary<string, Texture2D> mapTextures;
 
+    public GameObject torch;
+
     void Awake()
     {
 
@@ -53,7 +55,7 @@ public class MapGenerator : MonoBehaviour
         GenerateMap();
 
 
-        
+
     }
 
 
@@ -113,62 +115,77 @@ public class MapGenerator : MonoBehaviour
                 limit++;
                 if (limit >= 100)
                 {
+                    Debug.LogWarning("Impossible de trouver un coté de sortie");
                     break;
                 }
             }
         }
 
         GenerateMapMesh();
-
-        for (int i = 0; i < 10; i++)
-        {
-
-            //On va plutot mettre les torch ici et les object via le spawner TODO
-           // GenerateObject(Random.Range(3, 10), Random.Range(3, 10));
-
-
-            //TilesPattern patern = new TilesPattern(5, 3, Tiles.Floor);
-            //Vector2 paternPosition = GetCurrentRoom().FindRandomPattern(patern.pattern);
-            //Vector2 anchor = new Vector3(paternPosition.x + 1, paternPosition.y + 1);
-            //GameObject o = Instantiate(boxFixed[0], anchor, Quaternion.identity) as GameObject;
-            //o.transform.parent = mapHolder.transform;
-            //GetCurrentRoom().AddPatternToMap((int)(paternPosition.x), (int)(paternPosition.y), 5, 3, Tiles.Items);
-
-            //TilesPattern patern2 = new TilesPattern(3, 3, Tiles.Floor);
-            //Vector2 paternPosition2 = GetCurrentRoom().FindRandomPattern(patern2.pattern);
-            //Vector2 anchor2 = new Vector3(paternPosition2.x + 1, paternPosition2.y + 1);
-            //GameObject o2 = Instantiate(barrel[0], anchor2, Quaternion.identity) as GameObject;
-            //o2.transform.parent = mapHolder.transform;
-            //GetCurrentRoom().AddPatternToMap((int)(paternPosition2.x), (int)(paternPosition2.y), 3, 3, Tiles.Items);
-        }
-
-
+        GenerateTorch(new RandomInt(10, 20));
 
     }
 
-    private void GenerateObject(int width, int heigth)
+    private void GenerateTorch(RandomInt randomQuantityBySide)
     {
-        TilesPattern patern = new TilesPattern(width, heigth, Tiles.Floor);
-        //Vector2 paternPosition = GetCurrentRoom().FindRandomPattern(patern.pattern);
+        GameObject mapHolder = GameObject.Find(mapHolderName);
+        List<Vector2> patternPositionsSud = new List<Vector2>();
+        List<Vector2> patternPositionsNord = new List<Vector2>();
+        List<Vector2> patternPositionsOuest = new List<Vector2>();
+        List<Vector2> patternPositionsEst = new List<Vector2>();
 
-        //todo garder une margin de 1 pour ne pas break le path finding
-
-        for (int i = 1; i < patern.pattern.GetLength(0)-1; i++)
+        //Recherches des patterns
+        int quantity = randomQuantityBySide.GetRandomInt();
+        for (int i = 0; i < quantity; i++)
         {
-            for (int j = 1; j < patern.pattern.GetLength(1)-1; j++)
-            {
-                //Vector2 anchor = new Vector3(paternPosition.x + i, paternPosition.y + j);
-                GameObject mapHolder = GameObject.Find(mapHolderName);
-                //GameObject o = Instantiate(box[0], anchor, Quaternion.identity) as GameObject;
-                //o.transform.parent = mapHolder.transform;
-              //  GetCurrentRoom().AddPatternToMap((int) paternPosition.x + i, (int)paternPosition.y + j, 1, 1, Tiles.Wall);
-            }
+            Vector2? patternPositionSud = GetCurrentRoom().FindRandomPattern(TilesPattern.wallSud);
+            if (patternPositionSud != null) patternPositionsSud.Add(patternPositionSud.Value);
         }
 
-        //todo
-        //GetCurrentRoom().AddPatternToMap()
+        quantity = randomQuantityBySide.GetRandomInt();
+        for (int i = 0; i < quantity; i++)
+        {
+            Vector2? patternPositionNord = GetCurrentRoom().FindRandomPattern(TilesPattern.wallNord);
+            if (patternPositionNord != null) patternPositionsNord.Add(patternPositionNord.Value);
+        }
 
+        quantity = randomQuantityBySide.GetRandomInt();
+        for (int i = 0; i < quantity; i++)
+        {
+            Vector2? patternPositionOuest = GetCurrentRoom().FindRandomPattern(TilesPattern.wallOuest);
+            if (patternPositionOuest != null) patternPositionsOuest.Add(patternPositionOuest.Value);
+        }
 
+        quantity = randomQuantityBySide.GetRandomInt();
+        for (int i = 0; i < quantity; i++)
+        {
+            Vector2? patternPositionEst = GetCurrentRoom().FindRandomPattern(TilesPattern.wallEst);
+            if (patternPositionEst != null) patternPositionsEst.Add(patternPositionEst.Value);
+        }
+
+        //Suppression des doublons
+        patternPositionsSud = patternPositionsSud.Distinct().ToList();
+        patternPositionsNord = patternPositionsNord.Distinct().ToList();
+        patternPositionsOuest = patternPositionsOuest.Distinct().ToList();
+        patternPositionsEst = patternPositionsEst.Distinct().ToList();
+
+        //Instanciation
+        foreach (var pattern in patternPositionsSud)
+        {
+            GameObject o = Instantiate(torch, pattern + new Vector2(1.5f, 0.5f), Quaternion.identity) as GameObject;
+        }
+        foreach (var pattern in patternPositionsNord)
+        {
+            GameObject o = Instantiate(torch, pattern + new Vector2(1.5f, 2.5f), Quaternion.identity) as GameObject;
+        }
+        foreach (var pattern in patternPositionsOuest)
+        {
+            GameObject o = Instantiate(torch, pattern + new Vector2(0.5f, 1.5f), Quaternion.identity) as GameObject;
+        }
+        foreach (var pattern in patternPositionsEst)
+        {
+            GameObject o = Instantiate(torch, pattern + new Vector2(2.5f, 1.5f), Quaternion.identity) as GameObject;
+        }
     }
 
     private void GenerateMapMesh()

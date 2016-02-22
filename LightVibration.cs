@@ -10,11 +10,12 @@ public class LightVibration : MonoBehaviour
     float endRange;
     float oscilationRange;
     float oscilationOffset;
-    public float timeScale = Random.Range(0.3f, 0.5f);
+    float timeScale;
 
     void Start()
     {
         light = GetComponent<Light>();
+        timeScale = Random.Range(0.3f, 0.5f);
         startRange = 1.1f;
         endRange = 5.5f;
         oscilationRange = (endRange - startRange) / 2;

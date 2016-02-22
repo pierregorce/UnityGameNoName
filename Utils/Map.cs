@@ -21,7 +21,77 @@ public struct TilesPattern
 {
     public static Tiles[,] floor1 = new Tiles[1, 1] { { Tiles.Floor } };
     public static Tiles[,] floor3 = new Tiles[3, 3] { { Tiles.Floor, Tiles.Floor, Tiles.Floor }, { Tiles.Floor, Tiles.Floor, Tiles.Floor }, { Tiles.Floor, Tiles.Floor, Tiles.Floor } };
-    public static Tiles[,] wallNord = new Tiles[3, 3] { { Tiles.Floor, Tiles.Floor, Tiles.Floor }, { Tiles.Floor, Tiles.Floor, Tiles.Floor }, { Tiles.Floor, Tiles.Floor, Tiles.Floor } };
+
+    public static Tiles[,] wallSud = new Tiles[3, 3] {
+            {
+                Tiles.Wall,
+                Tiles.Floor,
+                Tiles.Floor },
+            {
+                Tiles.Wall,
+                Tiles.Floor,
+                Tiles.Floor
+            },
+            {
+                Tiles.Wall,
+                Tiles.Floor,
+                Tiles.Floor
+            }
+        };
+
+    public static Tiles[,] wallNord = new Tiles[3, 3] {
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Wall },
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Wall
+            },
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Wall
+            }
+        };
+
+    public static Tiles[,] wallOuest = new Tiles[3, 3] {
+            {
+                Tiles.Wall,
+                Tiles.Wall,
+                Tiles.Wall },
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Floor
+            },
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Floor
+            }
+        };
+
+    public static Tiles[,] wallEst = new Tiles[3, 3] {
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Floor },
+            {
+                Tiles.Floor,
+                Tiles.Floor,
+                Tiles.Floor
+            },
+            {
+                Tiles.Wall,
+                Tiles.Wall,
+                Tiles.Wall
+            }
+        };
+
+
+
     public Tiles[,] pattern;
 
     public TilesPattern(int sizeX, int sizeY, Tiles tileType)
@@ -324,11 +394,11 @@ public class MapUtils
 
             int percentCurrent = 0;
             string floorbase = "tiles_0";
-            
+
             foreach (var item in floors)
             {
                 percentCurrent += item.Value;
-                if (percentCurrent>= percentRoll)
+                if (percentCurrent >= percentRoll)
                 {
                     floorbase = item.Key;
                     break;
@@ -365,11 +435,11 @@ public class MapUtils
             //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor)) return "tiles_43";
             if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor))
                 return floorbase;
-                //return floors[Random.Range(0, floors.Length)];
+            //return floors[Random.Range(0, floors.Length)];
 
 
 
-           //return floors[Random.Range(0, floors.Length)];
+            //return floors[Random.Range(0, floors.Length)];
             return floorbase;
 
         }

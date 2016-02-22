@@ -419,7 +419,7 @@ public class Room
     {
         List<Vector2> irregularities = new List<Vector2>();
         int irregularityQuantityMaxBySide = 0;
-        int irregularitiyRatio = 5;
+        int irregularitiyRatio = 2;
 
         //Nord
         irregularityQuantityMaxBySide = (int)rect.width / irregularitiyRatio;
