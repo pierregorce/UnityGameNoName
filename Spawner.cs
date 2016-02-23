@@ -34,12 +34,16 @@ public class Spawner : MonoBehaviour
     public GameObject pipe;
     public GameObject totem;
 
-
     private MapGenerator map;
 
     //TODO
-    //  TORCH on wall
     // monster patrol
+    // WALL ILLUSTRATOR
+    // shot life particle
+    // shot bolt destroy correctly
+    // totem vertical (are they enney who shot ?)
+    // camera shake
+    // add rotation on particle ?
 
 
     void Start()

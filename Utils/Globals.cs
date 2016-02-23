@@ -31,4 +31,12 @@ namespace Assets.Scripts.Utils
         public const string GameManager = "gameManager";
     }
 
+    public class SortingLayerName
+    {
+        public const string A_particleOnGround = "ParticlesOnGround";
+        public const string B_obstacle = "Obstacle";
+        //...
+
+    }
+
 }

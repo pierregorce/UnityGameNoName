@@ -1,43 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Utils;
 
 public class Particle : MonoBehaviour
 {
-    Color[] iceColor = new Color[5];
 
+    public Sprite[] textures;
+
+    [Header("Physics things")]
+    [Range(2, 30)]
+    public float bounceVelocity = 7;
+    public float linearDrag = 2;
+
+    [Header("Force pushed")]
+    [Range(-500, -30)]
+    public int xForceMin = -150;
+    [Range(30, 500)]
+    public int xForceMax = 150;
+    [Range(-200, -30)]
+    public int yForceMin = -50;
+    [Range(30, 200)]
+    public int yForceMax = 50;
+    [Header("Torque pushed")]
+    public bool isTorque = true;
+    [Range(30, 500)]
+    public int torqueMin = 100;
+    [Range(30, 500)]
+    public int torqueMax = 200;
+
+    [Header("Lifetime")]
+    [Range(0, 30)]
+    public float lifeTimeMin = 5.5f;
+    [Range(0, 30)]
+    public float lifeTimeMax = 10f;
 
     void Start()
     {
-
-        iceColor[0] = new Color(203 / 255f, 223 / 255f, 244 / 255f, 1);
-        iceColor[1] = new Color(228 / 255f, 255 / 255f, 255 / 255f, 1);
-        iceColor[2] = new Color(254 / 255f, 254 / 255f, 255 / 255f, 1);
-        iceColor[3] = new Color(183 / 255f, 206 / 255f, 229 / 255f, 1);
-        iceColor[4] = new Color(205 / 255f, 254 / 255f, 254 / 255f, 1);
-
-        GetComponent<SpriteRenderer>().color = iceColor[Random.Range(0, iceColor.Length)];
-
-
-
-        float x = Random.Range(-150, 150);
-        float y = Random.Range(-50, 50);
-        GetComponent<Rigidbody2D>().drag = 2f;
+        float x = Random.Range(xForceMin, xForceMax);
+        float y = Random.Range(yForceMin, yForceMax);
+        GetComponent<Rigidbody2D>().drag = linearDrag;
+        GetComponent<Rigidbody2D>().AddTorque(Random.Range(torqueMin,torqueMax));
         GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
         BounceTimes(bounceNumber);
+        GetComponent<SpriteRenderer>().sprite = textures[Random.Range(0, textures.Length)];
 
-        Destroy(gameObject, Random.Range(5.5f, 10f));
+        Destroy(gameObject, Random.Range(lifeTimeMin, lifeTimeMax));
     }
 
-    public int bounceNumber = 3;
-    float startTime = 0;
-    float lastYOffset = 0;
-    public float bounceVelocity = 7;
-    float gravity = -9.81f;
-    float yOffset = 0;
+    //-------------------------- Bounce Effect --------------------
+
+    private int bounceNumber = Random.Range(2, 4);
+    private float startTime = 0;
+    private float lastYOffset = 0;
+    private float gravity = -9.81f;
+    private float yOffset = 0;
 
     public void BounceTimes(int numberOfBounces)
     {
-        // init
         startTime = Time.time;
         lastYOffset = 0.0f;
         bounceNumber = numberOfBounces;
@@ -46,12 +65,11 @@ public class Particle : MonoBehaviour
 
     void Update()
     {
-
         // if done with bounces, stop
         if (bounceNumber <= 0)
         {
             GetComponent<Rigidbody2D>().isKinematic = true; //stop forces
-            //GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
+            GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerName.A_particleOnGround;
             return;
         }
 
@@ -81,14 +99,15 @@ public class Particle : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
+        //todo use tag
         //Collision avec les murs et les items destroyables
         ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
 
-        if (itemDestroyable!=null)
+        if (itemDestroyable != null)
         {
             GetComponent<Rigidbody2D>().isKinematic = true; //stop forces
-           // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
-           // bounceNumber = 0;
+                                                            // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
+                                                            // bounceNumber = 0;
             BounceTimes(bounceNumber - 1);
         }
 

@@ -42,6 +42,8 @@ public class Monster : MonoBehaviour
     private Mortality mortality;
     private OrientableEntities orientableEntity;
 
+    public GameObject bloodParticle;
+
     // Use this for initialization
     void Start()
     {
@@ -117,6 +119,10 @@ public class Monster : MonoBehaviour
 
     void OnLoseLife(int value)
     {
+        for (int i = 0; i < Random.Range(3,6); i++)
+        {
+            Instantiate(bloodParticle, transform.position, Quaternion.identity);
+        }
         Debug.Log("monster, Je suis touché, ma vie est de " + mortality.health + " / " + mortality.initialHealth);
     }
 
