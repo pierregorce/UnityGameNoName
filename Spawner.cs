@@ -43,11 +43,11 @@ public class Spawner : MonoBehaviour
     // shot bolt destroy correctly
     // totem vertical (are they enney who shot ?)
     // camera shake
-    // add rotation on particle ?
-
-
+    // persistance block detroy
+    
     void Start()
     {
+        
         map = GameObject.Find(GameObjectName.Map).GetComponent<MapGenerator>();
 
         PlaceAllObjects(

@@ -14,9 +14,9 @@ public class PlayerController : MonoBehaviour
         mortality = GetComponent<Mortality>();
         mortality.initialHealth = 150;
         mortality.Revive();
-       // GameObject.Find("UI Life Text").GetComponent<Text>().text = "150/150";
+        // GameObject.Find("UI Life Text").GetComponent<Text>().text = "150/150";
 
-mortality.OnHealthDown += OnLoseLife;
+        mortality.OnHealthDown += OnLoseLife;
     }
 
     void OnLoseLife(int value)
@@ -24,7 +24,7 @@ mortality.OnHealthDown += OnLoseLife;
         Debug.Log("Player touch ma vie est de " + mortality.health + " / " + mortality.initialHealth);
         GetComponent<PlayerItemController>().LooseLife(value);
 
-       // GameObject.Find("UI Life Text").GetComponent<Text>().text = mortality.health + "/" + mortality.initialHealth;
+        // GameObject.Find("UI Life Text").GetComponent<Text>().text = mortality.health + "/" + mortality.initialHealth;
 
         //GameObject canvasText = Instantiate(canvasFloatingText);
 
@@ -54,9 +54,13 @@ mortality.OnHealthDown += OnLoseLife;
 
             GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
             projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
+
+
+            Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.SmallPerlin);
+
         }
 
-       
+
 
     }
 

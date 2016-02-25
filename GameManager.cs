@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     private MapGenerator mapGenerator;
     private Spawner spawner;
 
-    private int size = 6;
-
     private List<Vector2> patternPosition;
 
     void Start()
@@ -26,7 +24,8 @@ public class GameManager : MonoBehaviour
 
         if (patternPosition != null)
         {
-            Instantiate(player, new Vector2(patternPosition.Value.x + 1.5f, patternPosition.Value.y + 1.5f), Quaternion.identity);
+            GameObject playerClone = Instantiate(player, new Vector2(patternPosition.Value.x + 1.5f, patternPosition.Value.y + 1.5f), Quaternion.identity) as GameObject;
+            Camera.main.transform.parent.position = new Vector3(playerClone.transform.position.x, playerClone.transform.position.y, transform.parent.position.z);
         }
         else
         {
