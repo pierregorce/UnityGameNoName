@@ -42,9 +42,9 @@ public class Spawner : MonoBehaviour
     // shot life particle
     // shot bolt destroy correctly
     // totem vertical (are they enney who shot ?)
-    // camera shake
     // persistance block detroy
-    
+    //sorting layer https://forums.tigsource.com/index.php?topic=50972.0
+
     void Start()
     {
         

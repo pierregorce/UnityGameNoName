@@ -8,6 +8,7 @@ namespace Assets.Scripts.Utils
     //Permet d'identifier des groupements d'objets lors des checks globaux (collision par exemple).
     public class TagName
     {
+        public const string Floor = "floor";
         public const string Wall = "walls";
         public const string ItemFixed = "itemFixed";
         public const string ItemDestroyable = "itemDestroyable";
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Utils
         public const string Particle = "particle";
         public const string Player = "player";
 
+        //Permet d'identifier les tags sur lequels se produisent des collisions.
         public static string[] BlockMask = { Wall, ItemDestroyable, ItemFixed };
     }
 

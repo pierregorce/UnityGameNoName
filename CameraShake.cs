@@ -5,12 +5,12 @@ using Assets.Scripts.Utils;
 public class CameraShake : MonoBehaviour
 {
     //Simple random
-     float duration = 0.5f;
-     float magnitude = 0.1f;
+    float duration = 0.5f;
+    float magnitude = 0.1f;
 
     //For Perlin Noise
-     bool withPerlinNoise = false;
-     float speed = 1.0f;
+    bool withPerlinNoise = false;
+    float speed = 1.0f;
     float randomStart = 0;
     float perlinNoiseProgress = 0;
 
@@ -28,7 +28,7 @@ public class CameraShake : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            ShakeThatBooty();
+            ShakeThatBooty(ShakeParameters.MediumPerlin);
         }
 
         if (elapsedTime < duration && shaking)
@@ -77,6 +77,8 @@ public class CameraShake : MonoBehaviour
         elapsedTime = 0;
         withPerlinNoise = parameters.withPerlinNoise;
         speed = parameters.speed;
+        magnitude = parameters.magnitude;
+        duration = parameters.duration;
 
         if (!shaking)
         {
@@ -107,9 +109,7 @@ public class CameraShake : MonoBehaviour
     {
         public static readonly ShakeParameters Small = new ShakeParameters(0.4f, 0.05f);
         public static readonly ShakeParameters SmallPerlin = new ShakeParameters(0.4f, 0.05f, 25, true);
-
-        //public static readonly ShakeParameters Medium = new ShakeParameters(10, 10, 10);
-        //public static readonly ShakeParameters High = new ShakeParameters(10, 10, 10);
+        public static readonly ShakeParameters MediumPerlin = new ShakeParameters(0.4f, 0.65f, 25, true);
 
         public float duration;
         public float magnitude;

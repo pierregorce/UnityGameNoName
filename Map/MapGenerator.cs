@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Utils;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -213,12 +214,12 @@ public class MapGenerator : MonoBehaviour
             //Add & Texturise Mesh
             //On différencie le contenu en fonction des tilestype pour obtenir des mesh moins gros. (limit 85000 vertices)
             //Wall
-            GenerateMesh(room.container, map, roomRect.position, Tiles.Wall);
-            AddColliders(room, map);
+            GameObject meshGameObject = GenerateMesh(room.container, map, roomRect.position, Tiles.Wall, TagName.Wall);
+            AddColliders(meshGameObject, map);
             GenerateMapConnectivity(room.container, room);
 
             //Floor
-            GenerateMesh(room.container, map, roomRect.position, Tiles.Floor);
+            GenerateMesh(room.container, map, roomRect.position, Tiles.Floor, TagName.Floor);
 
             //Add Random Object
 
@@ -226,9 +227,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void GenerateMesh(GameObject container, Tiles[,] map, Vector2 position, Tiles tileType)
+    private GameObject GenerateMesh(GameObject container, Tiles[,] map, Vector2 position, Tiles tileType, string tag)
     {
         GameObject meshContainer = new GameObject("mesh-tiles-" + tileType.ToString());
+        meshContainer.tag = tag;
         meshContainer.transform.parent = container.transform;
         //Generate Mesh
         MeshFilter meshFilter = meshContainer.AddComponent<MeshFilter>();
@@ -271,9 +273,10 @@ public class MapGenerator : MonoBehaviour
         material.mainTexture = texture;
 
         meshRenderer.material = material;
+        return meshContainer;
     }
 
-    private void AddColliders(Room room, Tiles[,] map)
+    private void AddColliders(GameObject holder, Tiles[,] map)
     {
         for (int x = 0; x < map.GetLength(0); x++)
         {
@@ -283,7 +286,8 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (MapUtils.Get4Neighbours(map, x, y).Where(m => map[m.x, m.y] == Tiles.Wall).Count() != 4)
                     {
-                        BoxCollider2D collider = room.container.AddComponent<BoxCollider2D>();
+                        Debug.Log("add");
+                        BoxCollider2D collider = holder.AddComponent<BoxCollider2D>();
                         collider.size = Vector2.one;
                         collider.offset = new Vector2(x + 0.5f, y + 0.5f);
                     }
@@ -348,8 +352,8 @@ public class MapGenerator : MonoBehaviour
                 meshPosition = new Vector2(start.x - 1, start.y - mapConnection.GetLength(1));
             }
 
-            GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Wall);
-            GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Floor);
+            GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Wall, TagName.Wall);
+            GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Floor, TagName.Floor);
 
             // Add colliders
 
