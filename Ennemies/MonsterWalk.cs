@@ -3,15 +3,15 @@ using System.Collections;
 using System.Linq;
 using Assets.Scripts.Utils;
 
-public class Monster : MonoBehaviour
+public class MonsterWalk : MonsterEntity
 {
     //TODO
-    
+
     //ATTACK :
     //Player Immune Time TODO
     //Attack Cooldown + attack coroutine
     //How to -event from mortality ?
-    
+
     //Attack player vers monster : projectile -> how to bump monster = change pathfinding et isKinematic
     //Attack monster vers player : attack avec cd -> how to bump player
 
@@ -22,13 +22,6 @@ public class Monster : MonoBehaviour
     }
     private States state;
 
-    private float nextAttackTime;
-    private float timeBetweenAttacks = 1;
-
-
-    public int speed;
-    public int seekDistance = 5;
-
     private Transform target;
 
     private Vector2[] path;
@@ -37,28 +30,13 @@ public class Monster : MonoBehaviour
 
     private Tiles[,] map;
 
-    public bool isGizmos = true;
-
-    private Mortality mortality;
-    private OrientableEntities orientableEntity;
-
-    public GameObject bloodParticle;
-
-    // Use this for initialization
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         map = GameObject.Find("GameManager").GetComponent<GameManager>().GetCurrentMap();
-        mortality = GetComponent<Mortality>();
-        orientableEntity = GetComponent<OrientableEntities>();
-
         StartCoroutine(UpdatePath());
-        OnEnableQzd();
-        mortality.OnHealthDown += OnLoseLife;
-        mortality.initialHealth = 10;
-        mortality.Revive();
     }
 
-    // Update is called once per frame
     void Update()
     {
         target = GameObject.FindGameObjectWithTag(TagName.Player).transform;
@@ -83,57 +61,39 @@ public class Monster : MonoBehaviour
 
         if (Time.time > nextAttackTime)
         {
-
             float distance = (target.position - transform.position).magnitude;
-            if (distance<=0.9)
+            if (distance <= 0.75)
             {
                 nextAttackTime = Time.time + timeBetweenAttacks;
-                Debug.Log("Monster attack");
-                target.GetComponent<Mortality>().DecrementHealth(3);
+                target.GetComponent<Mortality>().DecrementHealth(baseAttackDamage);
             }
         }
 
 
-
     }
 
-
-    void OnEnableQzd()
+    protected override void OnDeath()
     {
-        // register this class' OnDeath() function
-        mortality.OnDeath += OnDeath;
+        base.OnDeath();
+        //todo placeholder death for permanence
     }
 
-    void OnDisable()
+    protected override void OnHealthDown(int value)
     {
-        // deregister this class' OnDeath() function
-        mortality.OnDeath -= OnDeath;
-    }
+        base.OnHealthDown(value);
 
-    void OnDeath()
-    {
-        Debug.Log("je suis mort");
-        // perform your specific logic here when this game object "dies"
-        Destroy(gameObject);
-    }
-
-    void OnLoseLife(int value)
-    {
-        for (int i = 0; i < Random.Range(3,6); i++)
+        for (int i = 0; i < Random.Range(3, 6); i++)
         {
-            Instantiate(bloodParticle, transform.position, Quaternion.identity);
+            GameObject hurtedParticle = Instantiate(hurtParticle, transform.position, Quaternion.identity) as GameObject;
+            hurtedParticle.transform.parent = transform;
+            //todo random spawn
         }
-        Debug.Log("monster, Je suis touché, ma vie est de " + mortality.health + " / " + mortality.initialHealth);
     }
-
-
-
 
     Vector3 currentWaypointGizmo;
 
     private IEnumerator FollowPath()
     {
-
         //BLOCAGE LORSQUE LE PATH CHANGE EN COURS DE TRAJET
         //une fois ça reglé, regler la position de pop du player
         //regler les tir ensuite ? !
@@ -172,6 +132,7 @@ public class Monster : MonoBehaviour
             //Pas obligatoire d'utiliser un rigidbody car le path esquive deja les murs // ERREUR SI POUR POUVOIR RECULER il faut modifier la velocity
 
             //Debug.Log("index : " + nodeIndex + " , destination : " + currentWaypoint + " " + currentWaypoint.GetHashCode());
+            Debug.Log(Vector2.Distance(target.position, transform.position));
             if (Vector2.Distance(target.position, transform.position) < seekDistance)
             {
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
@@ -181,14 +142,18 @@ public class Monster : MonoBehaviour
             float moveHorizontal = target.position.x - currentWaypoint.x;
 
             //Pas de modificatin si move = 0
-            if (moveHorizontal > 0)
+            if (orientableEntity != null)
             {
-                orientableEntity.currentFacingOrientation = OrientableEntities.FacingOrientation.FACING_RIGHT;
 
-            }
-            if (moveHorizontal < 0)
-            {
-                orientableEntity.currentFacingOrientation = OrientableEntities.FacingOrientation.FACING_LEFT;
+                if (moveHorizontal > 0)
+                {
+                    orientableEntity.CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_RIGHT;
+                }
+
+                if (moveHorizontal < 0)
+                {
+                    orientableEntity.CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_LEFT;
+                }
             }
 
             //transform.position = Vector2.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);

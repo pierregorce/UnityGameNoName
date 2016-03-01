@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Assets.Scripts.Utils;
+using System.Linq;
 
 public class Particle : MonoBehaviour
 {
-
     public Sprite[] textures;
 
     [Header("Physics things")]
@@ -99,18 +99,23 @@ public class Particle : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        //todo use tag
-        //Collision avec les murs et les items destroyables
-        ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
+        bool stopped = false;
 
-        if (itemDestroyable != null)
+        if (TagName.BlockMask.Contains(other.tag))
         {
-            GetComponent<Rigidbody2D>().isKinematic = true; //stop forces
-                                                            // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
-                                                            // bounceNumber = 0;
+            stopped = true;
+        }
+
+        if (stopped)
+        {
+            GetComponent<Rigidbody2D>().isKinematic = true; 
+            //stop forces
+            // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
+            // bounceNumber = 0;
             BounceTimes(bounceNumber - 1);
         }
 
+        ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
     }
 
 

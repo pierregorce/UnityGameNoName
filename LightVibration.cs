@@ -3,8 +3,7 @@ using System.Collections;
 
 public class LightVibration : MonoBehaviour
 {
-
-    private Light light;
+    private Light l;
 
     float startRange;
     float endRange;
@@ -14,7 +13,7 @@ public class LightVibration : MonoBehaviour
 
     void Start()
     {
-        light = GetComponent<Light>();
+        l = GetComponent<Light>();
         timeScale = Random.Range(0.3f, 0.5f);
         startRange = 1.1f;
         endRange = 5.5f;
@@ -25,6 +24,6 @@ public class LightVibration : MonoBehaviour
     void Update()
     {
         float result = oscilationOffset + Mathf.Sin(Time.time * timeScale) * oscilationRange;
-        light.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -result);
+        l.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -result);
     }
 }

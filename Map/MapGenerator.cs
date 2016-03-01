@@ -286,7 +286,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (MapUtils.Get4Neighbours(map, x, y).Where(m => map[m.x, m.y] == Tiles.Wall).Count() != 4)
                     {
-                        Debug.Log("add");
+                        
                         BoxCollider2D collider = holder.AddComponent<BoxCollider2D>();
                         collider.size = Vector2.one;
                         collider.offset = new Vector2(x + 0.5f, y + 0.5f);

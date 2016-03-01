@@ -105,7 +105,7 @@ public class PathfindingManager :MonoBehaviour
 
                 //  récupération des voisins de CURRENT
                 // Pour chacun des nodes adjacents à CURRENT appliquer la méthode suivante:
-                foreach (Node neighbour in grid.Get4Neighbours(currentNode))
+                foreach (Node neighbour in grid.Get8Neighbours(currentNode))
                 {
                     //Si le node est un obstacle ou est dans la liste fermée ignorez-le et passer à l'analyse d'un autre node.
                     if (!neighbour.walkable || closedSet.Contains(neighbour))

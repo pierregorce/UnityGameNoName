@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
         if (patternPosition != null)
         {
             GameObject playerClone = Instantiate(player, new Vector2(patternPosition.Value.x + 1.5f, patternPosition.Value.y + 1.5f), Quaternion.identity) as GameObject;
-            Camera.main.transform.parent.position = new Vector3(playerClone.transform.position.x, playerClone.transform.position.y, transform.parent.position.z);
+            //Camera.main.transform.parent.position = new Vector3(playerClone.transform.position.x, playerClone.transform.position.y, transform.parent.position.z);
         }
         else
         {

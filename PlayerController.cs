@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     public GameObject bolt;
     private Mortality mortality;
 
+    public GameObject bloodParticle;
+
     void Start()
     {
         mortality = GetComponent<Mortality>();
@@ -21,7 +23,12 @@ public class PlayerController : MonoBehaviour
 
     void OnLoseLife(int value)
     {
-        Debug.Log("Player touch ma vie est de " + mortality.health + " / " + mortality.initialHealth);
+        for (int i = 0; i < Random.Range(3, 6); i++)
+        {
+            Instantiate(bloodParticle, transform.position, Quaternion.identity);
+        }
+
+        //Debug.Log("Player touch ma vie est de " + mortality.health + " / " + mortality.initialHealth);
         GetComponent<PlayerItemController>().LooseLife(value);
 
         // GameObject.Find("UI Life Text").GetComponent<Text>().text = mortality.health + "/" + mortality.initialHealth;
@@ -54,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
             GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
             projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
-
+            projectile.GetComponent<Projectile>().sender = gameObject;
 
             Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.SmallPerlin);
 
@@ -78,11 +85,11 @@ public class PlayerController : MonoBehaviour
         //Pas de modificatin si move = 0
         if (moveHorizontal > 0)
         {
-            GetComponent<OrientableEntities>().currentFacingOrientation = OrientableEntities.FacingOrientation.FACING_RIGHT;
+            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_RIGHT;
         }
         if (moveHorizontal < 0)
         {
-            GetComponent<OrientableEntities>().currentFacingOrientation = OrientableEntities.FacingOrientation.FACING_LEFT;
+            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_LEFT;
         }
 
     }

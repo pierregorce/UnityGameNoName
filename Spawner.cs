@@ -33,22 +33,37 @@ public class Spawner : MonoBehaviour
     public GameObject brasero;
     public GameObject pipe;
     public GameObject totem;
+    public GameObject totemTall;
 
     private MapGenerator map;
 
     //TODO
     // monster patrol
     // WALL ILLUSTRATOR
-    // shot life particle
-    // shot bolt destroy correctly
-    // totem vertical (are they enney who shot ?)
     // persistance block detroy
-    //sorting layer https://forums.tigsource.com/index.php?topic=50972.0
+    // sorting layer https://forums.tigsource.com/index.php?topic=50972.0
+
+    // barel with acid cloud
+    // changer ombre monster 1
+
+    //object factory mieux que de link les prefabs partouts...  
+    //ennemies ammo can't destroy box or hurt ennemies... only player projectiles... use tag !friendly / ennemies
 
     void Start()
     {
-        
+
         map = GameObject.Find(GameObjectName.Map).GetComponent<MapGenerator>();
+
+
+        PlaceAllObjects(
+            quantity: new RandomInt(2, 4),
+            width: new RandomInt(3, 3),
+            height: new RandomInt(4, 4),
+            objectToInstanciate: totemTall,
+            holder: map.transform,
+            type: Tiles.Wall,
+            itemSize: new Vector2(1, 2)
+        );
 
         PlaceAllObjects(
             quantity: new RandomInt(10, 15),
@@ -57,7 +72,7 @@ public class Spawner : MonoBehaviour
             objectToInstanciate: jewels,
             holder: map.transform,
             type: Tiles.Items,
-            marginSize:0
+            marginSize: 0
         );
 
         PlaceAllObjects(
@@ -104,11 +119,11 @@ public class Spawner : MonoBehaviour
             objectToInstanciate: totem,
             holder: map.transform,
             type: Tiles.Wall,
-            itemSize:new Vector2(3,1)
+            itemSize: new Vector2(3, 1)
             );
 
         PlaceAllObjects(
-            quantity: new RandomInt(1, 5),
+            quantity: new RandomInt(1, 1),
             width: new RandomInt(3, 3),
             height: new RandomInt(3, 3),
             objectToInstanciate: monster1,
@@ -116,14 +131,16 @@ public class Spawner : MonoBehaviour
             type: Tiles.Floor
             );
 
-        PlaceAllObjects(
-            quantity: new RandomInt(1, 5),
-            width: new RandomInt(3, 3),
-            height: new RandomInt(3, 3),
-            objectToInstanciate: monster2,
-            holder: map.transform,
-            type: Tiles.Floor
-            );
+        //PlaceAllObjects(
+        //    quantity: new RandomInt(1, 1),
+        //    width: new RandomInt(3, 3),
+        //    height: new RandomInt(3, 3),
+        //    objectToInstanciate: monster2,
+        //    holder: map.transform,
+        //    type: Tiles.Floor
+        //    );
+
+
 
     }
 
@@ -193,7 +210,7 @@ public class Spawner : MonoBehaviour
             }
             else
             {
-                if (itemSize.x + marginSize*2 > width)
+                if (itemSize.x + marginSize * 2 > width)
                 {
                     Debug.LogError("Erreur MarginSize fillWith ; La largeur de l'item est de " + itemSize.x + " alors que la largeur du pattern est de " + width + " for " + objectToInstanciate.name);
                     return;
@@ -238,7 +255,7 @@ public class Spawner : MonoBehaviour
             o.transform.parent = holder;
             map.GetCurrentRoom().AddPatternToMap((int)anchor.x, (int)anchor.y, (int)itemSize.x, (int)itemSize.y, type);
         }
-        
+
     }
 
 
