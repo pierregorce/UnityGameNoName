@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour
     {
         if (player == null)
         {
-            player = GameObject.FindGameObjectWithTag(TagName.Player);
+            player = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().player;
         }
         else
         {

@@ -44,8 +44,7 @@ public class ItemCollectable : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-
-        if (other.tag == TagName.Player && active)
+        if (other.tag == TagName.Friendly && active)
         {
             other.GetComponent<PlayerItemController>().LootItem(2);
             StartCoroutine(DeadEffect());

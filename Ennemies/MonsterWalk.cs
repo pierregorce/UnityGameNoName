@@ -33,13 +33,13 @@ public class MonsterWalk : MonsterEntity
     protected override void Start()
     {
         base.Start();
-        map = GameObject.Find("GameManager").GetComponent<GameManager>().GetCurrentMap();
+        map = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().GetCurrentMap();
         StartCoroutine(UpdatePath());
     }
 
     void Update()
     {
-        target = GameObject.FindGameObjectWithTag(TagName.Player).transform;
+        target = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().player.transform;
 
         //if (Vector2.Distance(target.position, transform.position) < seekDistance)
         //{
@@ -85,7 +85,7 @@ public class MonsterWalk : MonsterEntity
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
             GameObject hurtedParticle = Instantiate(hurtParticle, transform.position, Quaternion.identity) as GameObject;
-            hurtedParticle.transform.parent = transform;
+            hurtedParticle.transform.parent = GameObject.Find(GameObjectName.GameManager).transform;
             //todo random spawn
         }
     }
@@ -132,7 +132,7 @@ public class MonsterWalk : MonsterEntity
             //Pas obligatoire d'utiliser un rigidbody car le path esquive deja les murs // ERREUR SI POUR POUVOIR RECULER il faut modifier la velocity
 
             //Debug.Log("index : " + nodeIndex + " , destination : " + currentWaypoint + " " + currentWaypoint.GetHashCode());
-            Debug.Log(Vector2.Distance(target.position, transform.position));
+            //Debug.Log(Vector2.Distance(target.position, transform.position));
             if (Vector2.Distance(target.position, transform.position) < seekDistance)
             {
                 transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
@@ -175,7 +175,7 @@ public class MonsterWalk : MonsterEntity
         {
             if (target != null)
             {
-                map = GameObject.Find("GameManager").GetComponent<GameManager>().GetCurrentMap();
+                map = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().GetCurrentMap();
                 PathfindingManager.getInstance().RequestPath(transform.position, target.position, new Grid(map, new Vector2(0, 0)), OnPathFound);
             }
 

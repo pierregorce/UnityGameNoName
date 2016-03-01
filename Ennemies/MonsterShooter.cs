@@ -10,7 +10,7 @@ public class MonsterShooter : MonsterEntity
     protected override void Start()
     {
         base.Start();
-        target = GameObject.FindGameObjectWithTag(TagName.Player).transform;
+        target = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().player.transform;
     }
 
     void Update()
@@ -36,7 +36,7 @@ public class MonsterShooter : MonsterEntity
             shootProjectile.GetComponent<Projectile>().sender = gameObject;
 
             Vector3 targetPosition = target.position;
-            Vector3 startPosition = transform.position;
+            Vector3 startPosition = transform.GetChild(0).transform.position;
             Vector2 direction = targetPosition - startPosition;
             direction.Normalize();
 

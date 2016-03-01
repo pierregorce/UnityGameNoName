@@ -5,12 +5,22 @@ using Assets.Scripts.Utils;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject player;
+    public GameObject playerPrefab;
+
+    public GameObject player
+    {
+        get; private set;
+    }
+
     private MapGenerator mapGenerator;
     private Spawner spawner;
 
     private List<Vector2> patternPosition;
 
+    void Awake()
+    {
+        player = Instantiate(playerPrefab) as GameObject;
+    }
     void Start()
     {
         mapGenerator = GameObject.Find(GameObjectName.Map).GetComponent<MapGenerator>();
@@ -24,7 +34,7 @@ public class GameManager : MonoBehaviour
 
         if (patternPosition != null)
         {
-            GameObject playerClone = Instantiate(player, new Vector2(patternPosition.Value.x + 1.5f, patternPosition.Value.y + 1.5f), Quaternion.identity) as GameObject;
+            player.transform.position = new Vector2(patternPosition.Value.x + 1.5f, patternPosition.Value.y + 1.5f);
             //Camera.main.transform.parent.position = new Vector3(playerClone.transform.position.x, playerClone.transform.position.y, transform.parent.position.z);
         }
         else
@@ -35,7 +45,7 @@ public class GameManager : MonoBehaviour
 
     public Tiles[,] GetCurrentMap()
     {
-        if (mapGenerator!=null)
+        if (mapGenerator != null)
         {
             return mapGenerator.GetCurrentRoom().GetMap();
         }
@@ -46,7 +56,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-           // patternPosition = map.GetCurrentRoom().FindRandomPattern(new TilesPattern(size, size, Tiles.Floor).pattern);
+            // patternPosition = map.GetCurrentRoom().FindRandomPattern(new TilesPattern(size, size, Tiles.Floor).pattern);
         }
     }
 

@@ -3,20 +3,23 @@ using System.Collections;
 using Assets.Scripts.Utils;
 using System.Linq;
 
-public class Projectile : MonoBehaviour {
+public class Projectile : MonoBehaviour
+{
 
     public int damage = 5;
     public GameObject explosion;
 
     public GameObject sender;
 
-    void Start () {
+    void Start()
+    {
         Destroy(gameObject, 5f);
     }
-	
-	void Update () {
-	
-	}
+
+    void Update()
+    {
+
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -28,27 +31,6 @@ public class Projectile : MonoBehaviour {
             destroy = true;
         }
 
-
-
-        if (tag.Equals(TagName.FriendlyProjectiles))
-        {
-
-
-        }
-
-        //TODO PAS DE TAG PLAYER MAIS UN TAG FRIENDLY
-        if (other.tag.Equals(TagName.Enemy))
-        {
-
-
-        }
-
-        if (tag.Equals(TagName.EnemyProjectiles))
-        {
-
-        }
-
-
         // Mortality
         Mortality mortality = other.GetComponent<Mortality>();
 
@@ -56,9 +38,34 @@ public class Projectile : MonoBehaviour {
         {
             if (other.gameObject != sender)
             {
-                destroy = true;
-                mortality.DecrementHealth(damage);
-                //todo faire reculer le target
+                // Si projectile AMI
+                if (tag.Equals(TagName.FriendlyProjectiles))
+                {
+                    //Ne recherche que les collisions avec les ennemys
+                    if (other.tag.Equals(TagName.Enemy))
+                    {
+                        destroy = true;
+                        mortality.DecrementHealth(damage);
+                        //todo faire reculer le target
+                    }
+                    if (TagName.BlockMask.Contains(other.tag))
+                    {
+                        destroy = true;
+                        mortality.DecrementHealth(damage);
+                    }
+                }
+
+                // Si projectile ENEMY
+                if (tag.Equals(TagName.EnemyProjectiles))
+                {
+                    //Ne recherche que les collisions avec les friendly
+                    if (other.tag.Equals(TagName.Friendly))
+                    {
+                        destroy = true;
+                        mortality.DecrementHealth(damage);
+                        //todo faire reculer le target
+                    }
+                }
             }
         }
 

@@ -18,7 +18,7 @@ namespace Assets.Scripts.Utils
         public const string Friendly = "friendly";
         public const string FriendlyProjectiles = "friendlyProjectiles";
         public const string Particle = "particle";
-        public const string Player = "player";
+        //public const string Player = "player";
 
         //Permet d'identifier les tags sur lequels se produisent des collisions.
         public static string[] BlockMask = { Wall, ItemDestroyable, ItemFixed };
