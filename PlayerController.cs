@@ -63,7 +63,7 @@ public class PlayerController : MonoBehaviour
             projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
             projectile.GetComponent<Projectile>().sender = gameObject;
 
-            Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.SmallPerlin);
+            Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.PerlinLevel1);
 
         }
 

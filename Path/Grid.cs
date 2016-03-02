@@ -5,11 +5,14 @@ using System.Collections.Generic;
 public class Grid
 {
     public Node[,] grid;
-    //public Vector2 worldBottomLeft;
+    public static int GridSize = 1;
+    public Vector2 worldBottomLeft;
 
     public Grid(Tiles[,] map, Vector2 worldBottomLeft)
     {
         grid = new Node[map.GetLength(0), map.GetLength(1)];
+        this.worldBottomLeft = worldBottomLeft;
+
         for (int x = 0; x < map.GetLength(0); x++)
         {
             for (int y = 0; y < map.GetLength(1); y++)
@@ -18,6 +21,14 @@ public class Grid
                 grid[x, y] = new Node(map[x, y] != Tiles.Wall, worldPoint, x, y);
             }
         }
+    }
+
+    /// <summary>
+    /// Retourne une position à partir d'un node d'une grid (Position au centre).
+    /// </summary>
+    public Vector2 WorldPointFromNode(Vector2 nodePosition)
+    {
+        return new Vector3(worldBottomLeft.x + nodePosition.x + (GridSize / 2f), worldBottomLeft.y + nodePosition.y + (GridSize / 2f));
     }
 
     /// <summary>
@@ -33,8 +44,7 @@ public class Grid
         //int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
         //int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
         //return grid[x, y];
-
-
+        
         //TODO WTF ?
         return grid[((int)worldPosition.x), ((int)worldPosition.y)];
     }

@@ -12,14 +12,17 @@ public class GameManager : MonoBehaviour
         get; private set;
     }
 
-    private MapGenerator mapGenerator;
+    public MapGenerator mapGenerator;
     private Spawner spawner;
+    public static GameManager instance { get; private set; }
 
     private List<Vector2> patternPosition;
 
     void Awake()
     {
+        instance = this;
         player = Instantiate(playerPrefab) as GameObject;
+
     }
     void Start()
     {
@@ -48,6 +51,15 @@ public class GameManager : MonoBehaviour
         if (mapGenerator != null)
         {
             return mapGenerator.GetCurrentRoom().GetMap();
+        }
+        return null;
+    }
+
+    public Grid GetCurrentGrid()
+    {
+        if (mapGenerator != null)
+        {
+            return new Grid(GetCurrentMap(), mapGenerator.GetCurrentRoom().GetRect().position);
         }
         return null;
     }

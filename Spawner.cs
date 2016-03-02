@@ -47,7 +47,14 @@ public class Spawner : MonoBehaviour
     // changer ombre monster 1
 
     //object factory mieux que de link les prefabs partouts...  
-    //ennemies ammo can't destroy box or hurt ennemies... only player projectiles... use tag !friendly / ennemies
+
+
+   //trap WITH SPIKES ?
+   //trap with arrow left to right
+
+    //PLACEHOLDER NOW
+
+
 
     void Start()
     {

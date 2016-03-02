@@ -36,7 +36,8 @@ public class MonsterEntity : MonoBehaviour
         // perform your specific logic here when this game object "dies"
         mortality.OnDeath -= OnDeath;
         mortality.OnHealthDown -= OnHealthDown;
-        Destroy(gameObject);
+        //todo animation & placeholder
+        Destroy(gameObject,6);
     }
 
     protected virtual void OnHealthDown(int value)
@@ -46,12 +47,10 @@ public class MonsterEntity : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        // register this class' OnDeath() function
     }
 
     protected virtual void OnDisable()
     {
-        // deregister this class' OnDeath() function
-
+        
     }
 }

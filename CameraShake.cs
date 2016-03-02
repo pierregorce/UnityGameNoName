@@ -28,7 +28,7 @@ public class CameraShake : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            ShakeThatBooty(ShakeParameters.MediumPerlin);
+            ShakeThatBooty(ShakeParameters.PerlinLevel3);
         }
 
         if (elapsedTime < duration && shaking)
@@ -108,8 +108,9 @@ public class CameraShake : MonoBehaviour
     public class ShakeParameters
     {
         public static readonly ShakeParameters Small = new ShakeParameters(0.4f, 0.05f);
-        public static readonly ShakeParameters SmallPerlin = new ShakeParameters(0.4f, 0.05f, 25, true);
-        public static readonly ShakeParameters MediumPerlin = new ShakeParameters(0.4f, 0.65f, 25, true);
+        public static readonly ShakeParameters PerlinLevel1 = new ShakeParameters(0.4f, 0.05f, 25, true);
+        public static readonly ShakeParameters PerlinLevel2 = new ShakeParameters(0.4f, 0.3f, 25, true);
+        public static readonly ShakeParameters PerlinLevel3 = new ShakeParameters(0.4f, 0.65f, 25, true);
 
         public float duration;
         public float magnitude;
