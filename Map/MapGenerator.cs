@@ -42,7 +42,6 @@ public class MapGenerator : MonoBehaviour
 
     void Awake()
     {
-
         mapTextures = new Dictionary<string, Texture2D>();
         //Toutes les textures se trouveront dans ce tableau avec pour clé le nom du sprite attribué lors de la découpe par unity.
 
@@ -54,9 +53,6 @@ public class MapGenerator : MonoBehaviour
         }
 
         GenerateMap();
-
-
-
     }
 
 
@@ -174,18 +170,22 @@ public class MapGenerator : MonoBehaviour
         foreach (var pattern in patternPositionsSud)
         {
             GameObject o = Instantiate(torch, pattern + new Vector2(1.5f, 0.5f), Quaternion.identity) as GameObject;
+            o.transform.parent = mapHolder.transform;
         }
         foreach (var pattern in patternPositionsNord)
         {
             GameObject o = Instantiate(torch, pattern + new Vector2(1.5f, 2.5f), Quaternion.identity) as GameObject;
+            o.transform.parent = mapHolder.transform;
         }
         foreach (var pattern in patternPositionsOuest)
         {
             GameObject o = Instantiate(torch, pattern + new Vector2(0.5f, 1.5f), Quaternion.identity) as GameObject;
+            o.transform.parent = mapHolder.transform;
         }
         foreach (var pattern in patternPositionsEst)
         {
             GameObject o = Instantiate(torch, pattern + new Vector2(2.5f, 1.5f), Quaternion.identity) as GameObject;
+            o.transform.parent = mapHolder.transform;
         }
     }
 

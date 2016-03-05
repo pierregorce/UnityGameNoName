@@ -37,7 +37,7 @@ public class MonsterEntity : MonoBehaviour
         mortality.OnDeath -= OnDeath;
         mortality.OnHealthDown -= OnHealthDown;
         //todo animation & placeholder
-        Destroy(gameObject,6);
+        Destroy(gameObject);
     }
 
     protected virtual void OnHealthDown(int value)

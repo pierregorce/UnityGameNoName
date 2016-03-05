@@ -18,6 +18,8 @@ namespace Assets.Scripts.Utils
         public const string Friendly = "friendly";
         public const string FriendlyProjectiles = "friendlyProjectiles";
         public const string Particle = "particle";
+        public const string TrapEnemy = "trapEnemy";
+        public const string TrapNeutral = "trapNeutral";
         //public const string Player = "player";
 
         //Permet d'identifier les tags sur lequels se produisent des collisions.
@@ -28,7 +30,6 @@ namespace Assets.Scripts.Utils
     public class GameObjectName
     {
         public const string Ui = "ui";
-        public const string Map = "map";
         public const string Spawner = "spawner";
         public const string GameManager = "gameManager";
     }

@@ -74,7 +74,7 @@ public class MonsterShooter : MonsterEntity
 
 
 
-    protected void OnLoseLifeQQ(int value)
+    protected override void OnHealthDown(int value)
     {
         if (hurtParticle != null)
         {

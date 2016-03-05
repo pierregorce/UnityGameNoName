@@ -6,7 +6,6 @@ using Assets.Scripts.Utils;
 public class GameManager : MonoBehaviour
 {
     public GameObject playerPrefab;
-
     public GameObject player
     {
         get; private set;
@@ -22,11 +21,10 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         player = Instantiate(playerPrefab) as GameObject;
-
+        mapGenerator = GetComponent<MapGenerator>();
     }
     void Start()
     {
-        mapGenerator = GameObject.Find(GameObjectName.Map).GetComponent<MapGenerator>();
         spawner = GameObject.Find(GameObjectName.Spawner).GetComponent<Spawner>();
         PlacePlayer();
     }

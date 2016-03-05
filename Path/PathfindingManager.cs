@@ -133,7 +133,7 @@ public class PathfindingManager :MonoBehaviour
         }
         else
         {
-            Debug.Log("erreur les tiles a de depart fin ne sont pas walkable / debut : " + startNode.walkable + "fin : " + targetNode.walkable);
+            Debug.LogWarning("erreur les tiles a de depart fin ne sont pas walkable / debut : " + startNode.walkable + "fin : " + targetNode.walkable);
         }
 
         yield return null; //???

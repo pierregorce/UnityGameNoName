@@ -34,6 +34,7 @@ public class Spawner : MonoBehaviour
     public GameObject pipe;
     public GameObject totem;
     public GameObject totemTall;
+    public GameObject spike;
 
     private MapGenerator map;
 
@@ -47,20 +48,18 @@ public class Spawner : MonoBehaviour
     // changer ombre monster 1
 
     //object factory mieux que de link les prefabs partouts...  
-
-
-   //trap WITH SPIKES ?
-   //trap with arrow left to right
-
-    //PLACEHOLDER NOW
+    
+    //ALL ITEM POSITIONNED IN BOTTOM LEFT IS NOT A PB ? pour le flip pose pb
+    //FAIRE 2 COLLISIONNEUR POUR LE PLAYER : MOUVEMENT & DAMAGE ;)
+    //trap with arrow left to right
+    //ui?
 
 
 
     void Start()
     {
 
-        map = GameObject.Find(GameObjectName.Map).GetComponent<MapGenerator>();
-
+        map = GameManager.instance.mapGenerator;
 
         PlaceAllObjects(
             quantity: new RandomInt(2, 4),
@@ -87,6 +86,16 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(5, 12),
             height: new RandomInt(3, 8),
             objectToInstanciate: box,
+            holder: map.transform,
+            type: Tiles.Wall,
+            fillWith: true
+            );
+
+        PlaceAllObjects(
+            quantity: new RandomInt(2,3),
+            width: new RandomInt(3, 5),
+            height: new RandomInt(4, 6),
+            objectToInstanciate: spike,
             holder: map.transform,
             type: Tiles.Wall,
             fillWith: true
