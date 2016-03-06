@@ -1,16 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MonsterEntity : MonoBehaviour
+public class MonsterEntity : PhysicalEntities
 {
-
     [Header("Attack")]
     protected float nextAttackTime;
     public float timeBetweenAttacks = 1;
     public int baseAttackDamage  = 5;
-
-    [Header("Movement")]
-    public float speed = 2;
     public int seekDistance = 5;
 
     [Header("Helper")]

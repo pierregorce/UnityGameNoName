@@ -5,68 +5,57 @@ using Assets.Scripts.Utils;
 
 public class MonsterWalk : MonsterEntity
 {
-    //TODO
-
-    //ATTACK :
-    //Player Immune Time TODO
-    //Attack Cooldown + attack coroutine
-    //How to -event from mortality ?
-
-    //Attack player vers monster : projectile -> how to bump monster = change pathfinding et isKinematic
-    //Attack monster vers player : attack avec cd -> how to bump player
+    //enum States
+    //{
+    //    Idle, Chasing, Bumped, Attacking
+    //}
+    //private States state;
 
 
-    enum States
-    {
-        Idle, Chasing, Bumped, Attacking
-    }
-    private States state;
+    private float nextNewPatrolTime;
+    private float timeBetweenNextNewPatrol = 3.5f;
+
 
     private Transform target;
 
     private Vector2[] path;
     private int nodeIndex;
     private Coroutine coroutine;
-
     private Tiles[,] map;
 
     protected override void Start()
     {
         base.Start();
-        map = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().GetCurrentMap();
+        map = GameManager.instance.GetCurrentMap();
         StartCoroutine(UpdatePath());
     }
 
-    void Update()
+    protected override void Update()
     {
-        target = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().player.transform;
-
-        //if (Vector2.Distance(target.position, transform.position) < seekDistance)
-        //{
-        //    //todo mettre une state idle
-        //}
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("BUMP");
-            GetComponent<Rigidbody2D>().isKinematic = false;
-            GetComponent<Rigidbody2D>().AddForce(new Vector2(0, -10), ForceMode2D.Impulse);
-        }
-
-        if (GetComponent<Rigidbody2D>().velocity.magnitude <= Vector2.one.magnitude)
-        {
-            GetComponent<Rigidbody2D>().isKinematic = true;
-        }
+        base.Update();
+        target = GameManager.instance.player.transform;
+        float distance = (target.position - transform.position).magnitude;
 
 
+        //Attack
         if (Time.time > nextAttackTime)
         {
-            float distance = (target.position - transform.position).magnitude;
             if (distance <= 0.75)
             {
                 nextAttackTime = Time.time + timeBetweenAttacks;
                 target.GetComponent<Mortality>().DecrementHealth(baseAttackDamage);
+
+                Vector2 direction = target.position - transform.position; //direction entre this and target
+                direction.Normalize();
+                target.GetComponent<PhysicalEntities>().ApplyForce(direction * 5);
             }
+        }
+
+
+        //Patrol
+        if (distance < seekDistance) ///todo mettre du state c'est plus propre
+        {
+
         }
 
 
@@ -133,15 +122,31 @@ public class MonsterWalk : MonsterEntity
 
             //Debug.Log("index : " + nodeIndex + " , destination : " + currentWaypoint + " " + currentWaypoint.GetHashCode());
             //Debug.Log(Vector2.Distance(target.position, transform.position));
-            if (Vector2.Distance(target.position, transform.position) < seekDistance)
+
+
+
+
+
+
+
+
+            float distance = Vector2.Distance(target.position, transform.position);
+
+
+            if (distance < seekDistance && distance > 0.7f)
             {
-                transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
+                Vector2 direction = currentWaypoint - (Vector2)transform.position; //direction entre this and target
+                direction.Normalize();
+                moveVelocity = direction * moveSpeed;
+                //transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
+            }
+            else
+            {
+                moveVelocity = Vector2.zero;
             }
 
-
-            float moveHorizontal = target.position.x - currentWaypoint.x;
-
             //Pas de modificatin si move = 0
+            float moveHorizontal = target.position.x - currentWaypoint.x;
             if (orientableEntity != null)
             {
 

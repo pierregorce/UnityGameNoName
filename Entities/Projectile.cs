@@ -5,7 +5,7 @@ using System.Linq;
 
 public class Projectile : MonoBehaviour
 {
-
+    public int bumpForce = 3;
     public int damage = 5;
     public GameObject explosion;
 
@@ -33,6 +33,7 @@ public class Projectile : MonoBehaviour
 
         // Mortality
         Mortality mortality = other.GetComponent<Mortality>();
+        PhysicalEntities physics = other.GetComponent<PhysicalEntities>();
 
         if (mortality != null)
         {
@@ -46,7 +47,13 @@ public class Projectile : MonoBehaviour
                     {
                         destroy = true;
                         mortality.DecrementHealth(damage);
-                        //todo faire reculer le target
+                        if (physics != null && physics.bumpSensible)
+                        {
+                            Vector2 direction = other.transform.position - transform.position; //direction entre this and target
+                            direction.Normalize();
+                            physics.ApplyForce(direction * bumpForce);
+                        }
+
                     }
                     if (TagName.BlockMask.Contains(other.tag))
                     {
@@ -63,7 +70,12 @@ public class Projectile : MonoBehaviour
                     {
                         destroy = true;
                         mortality.DecrementHealth(damage);
-                        //todo faire reculer le target
+                        if (physics != null && physics.bumpSensible)
+                        {
+                            Vector2 direction = other.transform.position - transform.position; //direction entre this and target
+                            direction.Normalize();
+                            physics.ApplyForce(direction * bumpForce);
+                        }
                     }
                 }
             }

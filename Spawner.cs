@@ -48,11 +48,21 @@ public class Spawner : MonoBehaviour
     // changer ombre monster 1
 
     //object factory mieux que de link les prefabs partouts...  
-    
+
     //ALL ITEM POSITIONNED IN BOTTOM LEFT IS NOT A PB ? pour le flip pose pb
     //FAIRE 2 COLLISIONNEUR POUR LE PLAYER : MOUVEMENT & DAMAGE ;)
     //trap with arrow left to right
     //ui?
+    //--------------------------------------------------
+    // TODO : CERTINAS ENNEMY SONT FIXE (TOTEM) NE PAS FAIRE DE BUMP
+    // RAJOUTER UN BOOLEAN POUR SAVOIR SI FIXE
+    //-------------------------------------------------
+
+    //player rigidbody move with velocity , bump with additional velocity
+    // monster move with Vector2.MoveTowards -> not work have to add same component
+
+
+
 
 
 

@@ -13,8 +13,9 @@ public class MonsterShooter : MonsterEntity
         target = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().player.transform;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (Time.time > nextAttackTime)
         {
             float distance = (target.position - transform.position).magnitude;
