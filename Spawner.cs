@@ -39,7 +39,11 @@ public class Spawner : MonoBehaviour
     private MapGenerator map;
 
     //TODO
+
+
     // monster patrol
+
+
     // WALL ILLUSTRATOR
     // persistance block detroy
     // sorting layer https://forums.tigsource.com/index.php?topic=50972.0
@@ -49,20 +53,21 @@ public class Spawner : MonoBehaviour
 
     //object factory mieux que de link les prefabs partouts...  
 
-    //ALL ITEM POSITIONNED IN BOTTOM LEFT IS NOT A PB ? pour le flip pose pb
     //FAIRE 2 COLLISIONNEUR POUR LE PLAYER : MOUVEMENT & DAMAGE ;)
     //trap with arrow left to right
     //ui?
-    //--------------------------------------------------
-    // TODO : CERTINAS ENNEMY SONT FIXE (TOTEM) NE PAS FAIRE DE BUMP
-    // RAJOUTER UN BOOLEAN POUR SAVOIR SI FIXE
-    //-------------------------------------------------
-
-    //player rigidbody move with velocity , bump with additional velocity
-    // monster move with Vector2.MoveTowards -> not work have to add same component
+    
+    //Collision sans rigidbody with raycast ?
+    //ALL ITEM POSITIONNED IN BOTTOM LEFT IS NOT A PB ? pour le flip pose pb
 
 
+   
+        //ui bars
+        //ui event text
+        //game item life
+        //game item 
 
+        //3D ROTATE MIEUX SOUS UNITY CAR ON POURRA LE STOP LORS DU BUMP ITEM
 
 
 
@@ -102,7 +107,7 @@ public class Spawner : MonoBehaviour
             );
 
         PlaceAllObjects(
-            quantity: new RandomInt(2,3),
+            quantity: new RandomInt(2, 3),
             width: new RandomInt(3, 5),
             height: new RandomInt(4, 6),
             objectToInstanciate: spike,

@@ -9,6 +9,7 @@ public class MonsterEntity : PhysicalEntities
     public int baseAttackDamage  = 5;
     public int seekDistance = 5;
 
+
     [Header("Helper")]
     public bool isGizmos = true;
 

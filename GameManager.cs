@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public Tiles[,] GetCurrentMap()
+    private Tiles[,] GetCurrentMap()
     {
         if (mapGenerator != null)
         {

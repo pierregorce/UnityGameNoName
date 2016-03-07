@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class Node {
+public class Node 
+    : System.IEquatable<Node>
+{
 
     public bool walkable;
     public Vector2 worldPosition;
@@ -28,4 +31,20 @@ public class Node {
         }
     }
 
+    public override string ToString()
+    {
+        return "GridX : " + gridX + " / GridY : " + gridY;
+    }
+
+    public bool Equals(Node other)
+    {
+        if (other.gridX == gridX && other.gridY == gridY)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }

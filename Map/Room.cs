@@ -519,5 +519,40 @@ public class Room
 
     }
 
+    public Vector2? FindNearEmptyPosition(Vector2 currentPosition, int tilesAround)
+    {
+        //tilesAround représente le rayon du carré autour duquel on cherche
+
+        Tiles[,] map = GetMap();
+        List<Vector2> tilesOk = new List<Vector2>();
+
+        //ne fonctionne que pour la room 00 : prendre en compte world bottom left... du grid
+
+        int x = (int)currentPosition.x;
+        int y = (int)currentPosition.y;
+
+        for (int i = -tilesAround; i < tilesAround; i++)
+        {
+            for (int j = -tilesAround; j < tilesAround; j++)
+            {
+                if ((x - i) >= 0 && (x - i) < map.GetLength(0) && (y + j) >= 0 && (y + j) < map.GetLength(1))
+                {
+                    if (map[x + i, y + j] == Tiles.Floor)
+                    {
+                        tilesOk.Add(new Vector2(x + i, y + j));
+                    }
+                }
+            }
+        }
+
+        if (!(tilesOk.Count > 0))
+        {
+            return null;
+        }
+        else
+        {
+            return tilesOk[Random.Range(0, tilesOk.Count)];
+        }
+    }
 
 }

@@ -5,60 +5,160 @@ using Assets.Scripts.Utils;
 
 public class MonsterWalk : MonsterEntity
 {
-    //enum States
-    //{
-    //    Idle, Chasing, Bumped, Attacking
-    //}
-    //private States state;
+    public enum States
+    {
+        Idle, Seek, Patrol
+    }
 
+    public FiniteStateMachine<States> brain;
 
-    private float nextNewPatrolTime;
-    private float timeBetweenNextNewPatrol = 3.5f;
-
+    private Vector2? patrolTarget;
+    private Vector2 patrolStart;
+    public int patrolDistance = 5;
 
     private Transform target;
-
+    Vector3 currentWaypointGizmo;
     private Vector2[] path;
     private int nodeIndex;
-    private Coroutine coroutine;
-    private Tiles[,] map;
+    private Coroutine followPathCoroutine;
+    private Coroutine updatePathCoroutine;
 
     protected override void Start()
     {
         base.Start();
-        map = GameManager.instance.GetCurrentMap();
-        StartCoroutine(UpdatePath());
+
+        brain = new FiniteStateMachine<States>();
+
+        // This calls the Run() function while on run state.
+        // I will probably replace it with with a state callback or something similar sometime in the future to avoid calling TryGetValue all the time.
+        brain.AddTransition(States.Idle, States.Patrol, StartPatrol);
+        brain.AddTransition(States.Seek, States.Patrol, StartPatrol);
+        brain.AddTransition(States.Patrol, States.Patrol, DoPatrol);
+
+        brain.AddTransition(States.Idle, States.Seek, StartSeek);
+        brain.AddTransition(States.Patrol, States.Seek, StartSeek);
+        brain.AddTransition(States.Seek, States.Seek, DoSeek);
+
+        brain.AddTransition(States.Patrol, States.Idle, StartIdle);
+        brain.AddTransition(States.Seek, States.Idle, StartIdle);
+        brain.AddTransition(States.Idle, States.Idle, null);
+
+        brain.Initialise(States.Idle);
+    }
+
+    void StartPatrol()
+    {
+        if (followPathCoroutine != null)
+        {
+            StopCoroutine(followPathCoroutine);
+        }
+        if (updatePathCoroutine != null)
+        {
+            StopCoroutine(updatePathCoroutine);
+        }
+
+        patrolStart = transform.position;
+        patrolTarget = GameManager.instance.mapGenerator.GetCurrentRoom().FindNearEmptyPosition(transform.position, patrolDistance);
+
+        if (patrolTarget != null)
+        {
+            //Debug.Log(patrolTarget.Value);
+            updatePathCoroutine = StartCoroutine(UpdatePath(patrolTarget.Value));
+        }
+    }
+
+    void StartSeek()
+    {
+        if (followPathCoroutine != null)
+        {
+            StopCoroutine(followPathCoroutine);
+        }
+        if (updatePathCoroutine != null)
+        {
+            StopCoroutine(updatePathCoroutine);
+        }
+
+        //attention ici ne  pas mettre un vector2 mais un transform sinon on perd la modif en temps reel du transofmr
+        updatePathCoroutine = StartCoroutine(UpdatePath(target.position));
+    }
+
+    void StartIdle()
+    {
+        if (followPathCoroutine != null)
+        {
+            StopCoroutine(followPathCoroutine);
+        }
+        if (updatePathCoroutine != null)
+        {
+            StopCoroutine(updatePathCoroutine);
+        }
+    }
+
+    void DoPatrol()
+    {
+        if (patrolTarget == null)
+        {
+            StartPatrol();
+        }
+
+        Node node = GameManager.instance.GetCurrentGrid().NodeFromWorldPoint(transform.position);
+        Node nodeTarget = GameManager.instance.GetCurrentGrid().NodeFromWorldPoint(patrolTarget.Value);
+
+        if (patrolTarget != null && node.Equals(nodeTarget))
+        {
+            StartPatrol();
+        }
+    }
+
+    void DoSeek()
+    {
+        //Debug.Log("Je seek");
+        //En faite rien à mettre ici...
+    }
+
+    void DoAttack()
+    {
+        if (Time.time > nextAttackTime)
+        {
+            nextAttackTime = Time.time + timeBetweenAttacks;
+            target.GetComponent<Mortality>().DecrementHealth(baseAttackDamage);
+
+            Vector2 direction = target.position - transform.position; //direction entre this and target
+            direction.Normalize();
+            target.GetComponent<PhysicalEntities>().ApplyForce(direction * 5);
+        }
+    }
+
+    void Brain()
+    {
+
+        float distance = (target.position - transform.position).magnitude;
+
+        if (distance < 0.75)
+        {
+            DoAttack();
+        }
+
+        if (distance <= seekDistance)
+        {
+            brain.Advance(States.Seek);
+
+        }
+        else if (distance > seekDistance && distance < seekDistance + patrolDistance)
+        {
+            brain.Advance(States.Patrol);
+        }
+        else
+        {
+            brain.Advance(States.Idle);
+        }
     }
 
     protected override void Update()
     {
         base.Update();
         target = GameManager.instance.player.transform;
-        float distance = (target.position - transform.position).magnitude;
-
-
-        //Attack
-        if (Time.time > nextAttackTime)
-        {
-            if (distance <= 0.75)
-            {
-                nextAttackTime = Time.time + timeBetweenAttacks;
-                target.GetComponent<Mortality>().DecrementHealth(baseAttackDamage);
-
-                Vector2 direction = target.position - transform.position; //direction entre this and target
-                direction.Normalize();
-                target.GetComponent<PhysicalEntities>().ApplyForce(direction * 5);
-            }
-        }
-
-
-        //Patrol
-        if (distance < seekDistance) ///todo mettre du state c'est plus propre
-        {
-
-        }
-
-
+        Brain();
     }
 
     protected override void OnDeath()
@@ -78,8 +178,6 @@ public class MonsterWalk : MonsterEntity
             //todo random spawn
         }
     }
-
-    Vector3 currentWaypointGizmo;
 
     private IEnumerator FollowPath()
     {
@@ -133,17 +231,17 @@ public class MonsterWalk : MonsterEntity
             float distance = Vector2.Distance(target.position, transform.position);
 
 
-            if (distance < seekDistance && distance > 0.7f)
-            {
-                Vector2 direction = currentWaypoint - (Vector2)transform.position; //direction entre this and target
-                direction.Normalize();
-                moveVelocity = direction * moveSpeed;
-                //transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
-            }
-            else
-            {
-                moveVelocity = Vector2.zero;
-            }
+
+            //if (distance < seekDistance && distance > 0.7f)
+            //{
+            Vector2 direction = currentWaypoint - (Vector2)transform.position; //direction entre this and target
+            direction.Normalize();
+            moveVelocity = direction * moveSpeed;
+            //transform.position = Vector2.MoveTowards(transform.position, new Vector2(currentWaypoint.x, currentWaypoint.y), speed * Time.deltaTime);
+            //}
+
+
+
 
             //Pas de modificatin si move = 0
             float moveHorizontal = target.position.x - currentWaypoint.x;
@@ -174,14 +272,13 @@ public class MonsterWalk : MonsterEntity
         }
     }
 
-    private IEnumerator UpdatePath()
+    private IEnumerator UpdatePath(Vector2 target)
     {
         while (true)
         {
             if (target != null)
             {
-                map = GameObject.Find(GameObjectName.GameManager).GetComponent<GameManager>().GetCurrentMap();
-                PathfindingManager.getInstance().RequestPath(transform.position, target.position, new Grid(map, new Vector2(0, 0)), OnPathFound);
+                PathfindingManager.getInstance().RequestPath(transform.position, target, GameManager.instance.GetCurrentGrid(), OnPathFound);
             }
 
             yield return new WaitForSeconds(0.25f);
@@ -192,15 +289,15 @@ public class MonsterWalk : MonsterEntity
     {
         if (pathSuccessful && newPath.Length > 0 && target != null)
         {
-            if (coroutine != null)
+            if (followPathCoroutine != null)
             {
-                StopCoroutine(coroutine);
+                StopCoroutine(followPathCoroutine);
             }
 
             nodeIndex = 0;
             path = newPath;
-            //Debug.Log("new path found, relance de follow path");
-            coroutine = StartCoroutine(FollowPath());
+            //Debug.Log("Bam path found for state : " + brain.GetState());
+            followPathCoroutine = StartCoroutine(FollowPath());
         }
         else
         {
@@ -236,12 +333,11 @@ public class MonsterWalk : MonsterEntity
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(new Vector3(transform.position.x, transform.position.y, 0), seekDistance);
 
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(new Vector3(transform.position.x, transform.position.y, 0), seekDistance + patrolDistance);
 
         }
 
 
     }
-
-
-
 }

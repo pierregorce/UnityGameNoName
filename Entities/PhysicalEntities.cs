@@ -25,6 +25,12 @@ public class PhysicalEntities : MonoBehaviour
 
     protected virtual void Update()
     {
+        //Arrêt : la vélocity est récalculé à chaque instant. On veux donc repartir de 0 à chaque fois.
+        moveVelocity = Vector2.zero;
+    }
+
+    protected virtual void LateUpdate()
+    {
         //drag the additional velocity over time
         additionnalVelocity = additionnalVelocity * (1 - Time.fixedDeltaTime * drag);
         if (logMovement)
