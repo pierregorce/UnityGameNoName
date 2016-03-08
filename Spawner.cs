@@ -26,9 +26,7 @@ public class Spawner : MonoBehaviour
 {
     public GameObject monster1;
     public GameObject monster2;
-    public GameObject jewels;
 
-    public GameObject box;
     public GameObject barel;
     public GameObject brasero;
     public GameObject pipe;
@@ -36,45 +34,51 @@ public class Spawner : MonoBehaviour
     public GameObject totemTall;
     public GameObject spike;
 
+    [Header("Items")]
+    public GameObject box;
+    public GameObject jewels;
+    public GameObject healthItem;
+
     private MapGenerator map;
 
     //TODO
-
-
-    // monster patrol
 
 
     // WALL ILLUSTRATOR
     // persistance block detroy
     // sorting layer https://forums.tigsource.com/index.php?topic=50972.0
 
-    // barel with acid cloud
     // changer ombre monster 1
 
     //object factory mieux que de link les prefabs partouts...  
 
     //FAIRE 2 COLLISIONNEUR POUR LE PLAYER : MOUVEMENT & DAMAGE ;)
     //trap with arrow left to right
-    //ui?
-    
     //Collision sans rigidbody with raycast ?
-    //ALL ITEM POSITIONNED IN BOTTOM LEFT IS NOT A PB ? pour le flip pose pb
 
 
-   
-        //ui bars
-        //ui event text
-        //game item life
-        //game item 
 
-        //3D ROTATE MIEUX SOUS UNITY CAR ON POURRA LE STOP LORS DU BUMP ITEM
-
-
+    //ui bars (hud)
+    //ui event text
+    //game item life
+    //game item 
+    //barel with acid cloud-fog
 
     void Start()
     {
 
         map = GameManager.instance.mapGenerator;
+
+        PlaceAllObjects(
+            quantity: new RandomInt(5,10),
+            width: new RandomInt(1, 1),
+            height: new RandomInt(1, 1),
+            objectToInstanciate: healthItem,
+            holder: map.transform,
+            type: Tiles.Items,
+            marginSize: 0,
+            placeByCenter: true
+        );
 
         PlaceAllObjects(
             quantity: new RandomInt(2, 4),
@@ -183,7 +187,8 @@ public class Spawner : MonoBehaviour
     public void PlaceAllObjects(RandomInt quantity, RandomInt width, RandomInt height, GameObject objectToInstanciate, Transform holder, Tiles type,
         int marginSize = 1,
         bool fillWith = false,
-        Vector2? itemSize = null
+        Vector2? itemSize = null,
+        bool placeByCenter = false
         )
     {
 
@@ -195,11 +200,11 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < quantity.GetRandomInt(); i++)
         {
-            PlaceObject(width.GetRandomInt(), height.GetRandomInt(), objectToInstanciate, holder, type, itemFinalSize, fillWith, marginSize);
+            PlaceObject(width.GetRandomInt(), height.GetRandomInt(), objectToInstanciate, holder, type, itemFinalSize, fillWith, marginSize, placeByCenter);
         }
     }
 
-    private void PlaceObject(int width, int height, GameObject objectToInstanciate, Transform holder, Tiles type, Vector2 itemSize, bool fillWith, int marginSize)
+    private void PlaceObject(int width, int height, GameObject objectToInstanciate, Transform holder, Tiles type, Vector2 itemSize, bool fillWith, int marginSize, bool placeByCenter)
     {
         TilesPattern patern = new TilesPattern(width, height, Tiles.Floor);
         Vector2? paternPosition = map.GetCurrentRoom().FindRandomPattern(patern.pattern);
@@ -271,6 +276,10 @@ public class Spawner : MonoBehaviour
                 {
                     //Attention on ne prend pas en compte l'item size WTF si il ne fait pas 1...
                     Vector2 anchor = new Vector3(paternPosition.Value.x + i, paternPosition.Value.y + j);
+                    if (placeByCenter)
+                    {
+                        anchor = GameManager.instance.GetCurrentGrid().WorldPointFromNode(anchor);
+                    }
                     GameObject o = Instantiate(objectToInstanciate, anchor, Quaternion.identity) as GameObject;
                     o.transform.parent = holder;
                     map.GetCurrentRoom().AddPatternToMap((int)anchor.x, (int)anchor.y, 1, 1, type);
@@ -282,6 +291,10 @@ public class Spawner : MonoBehaviour
         {
             //Il n'y a qu'un seul objet à instancier.
             Vector2 anchor = new Vector3(paternPosition.Value.x + marginSize, paternPosition.Value.y + marginSize);
+            if (placeByCenter)
+            {
+                anchor = GameManager.instance.GetCurrentGrid().WorldPointFromNode(anchor);
+            }
             GameObject o = Instantiate(objectToInstanciate, anchor, Quaternion.identity) as GameObject;
             o.transform.parent = holder;
             map.GetCurrentRoom().AddPatternToMap((int)anchor.x, (int)anchor.y, (int)itemSize.x, (int)itemSize.y, type);

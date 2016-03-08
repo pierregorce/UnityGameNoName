@@ -11,15 +11,23 @@ public class Particle : MonoBehaviour
     [Range(2, 30)]
     public float bounceVelocity = 7;
     public float linearDrag = 2;
+    public bool isBlockMaskSensible = true;
+
+    [Header("Bouncing")]
+    [Range(1, 5)]
+    public int reboundMin = 1;
+    [Range(1, 5)]
+    public int reboundMax = 4;
+    public bool isBouncing = true;
 
     [Header("Force pushed")]
-    [Range(-500, -30)]
+    [Range(-500, -1)]
     public int xForceMin = -150;
-    [Range(30, 500)]
+    [Range(1, 500)]
     public int xForceMax = 150;
-    [Range(-200, -30)]
+    [Range(-200, -1)]
     public int yForceMin = -50;
-    [Range(30, 200)]
+    [Range(1, 200)]
     public int yForceMax = 50;
     [Header("Torque pushed")]
     public bool isTorque = true;
@@ -34,13 +42,25 @@ public class Particle : MonoBehaviour
     [Range(0, 30)]
     public float lifeTimeMax = 10f;
 
+    [Header("Scale")]
+    public float scaleMin = 0.95f;
+    public float scaleMax = 1.05f;
+
     void Start()
     {
         float x = Random.Range(xForceMin, xForceMax);
         float y = Random.Range(yForceMin, yForceMax);
+
+        float s = Random.Range(scaleMin, scaleMax);
+        transform.localScale = new Vector3(s, s);
+
         GetComponent<Rigidbody2D>().drag = linearDrag;
-        GetComponent<Rigidbody2D>().AddTorque(Random.Range(torqueMin,torqueMax));
+        if (isTorque)
+        {
+            GetComponent<Rigidbody2D>().AddTorque(Random.Range(torqueMin, torqueMax));
+        }
         GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
+        bounceNumber = Random.Range(reboundMin, reboundMax);
         BounceTimes(bounceNumber);
         GetComponent<SpriteRenderer>().sprite = textures[Random.Range(0, textures.Length)];
 
@@ -49,7 +69,7 @@ public class Particle : MonoBehaviour
 
     //-------------------------- Bounce Effect --------------------
 
-    private int bounceNumber = Random.Range(2, 4);
+    private int bounceNumber;
     private float startTime = 0;
     private float lastYOffset = 0;
     private float gravity = -9.81f;
@@ -65,6 +85,10 @@ public class Particle : MonoBehaviour
 
     void Update()
     {
+        if (!isBouncing)
+        {
+            return;
+        }
         // if done with bounces, stop
         if (bounceNumber <= 0)
         {
@@ -101,21 +125,21 @@ public class Particle : MonoBehaviour
     {
         bool stopped = false;
 
-        if (TagName.BlockMask.Contains(other.tag))
+        if (isBlockMaskSensible && TagName.BlockMask.Contains(other.tag))
         {
             stopped = true;
         }
 
         if (stopped)
         {
-            GetComponent<Rigidbody2D>().isKinematic = true; 
+            GetComponent<Rigidbody2D>().isKinematic = true;
             //stop forces
             // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
             // bounceNumber = 0;
             BounceTimes(bounceNumber - 1);
         }
 
-        ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
+        //ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
     }
 
 
