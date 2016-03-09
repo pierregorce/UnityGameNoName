@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     }
 
     public MapGenerator mapGenerator;
+    public UIManager uiManager;
     private Spawner spawner;
     public static GameManager instance { get; private set; }
 
@@ -22,11 +23,13 @@ public class GameManager : MonoBehaviour
         instance = this;
         player = Instantiate(playerPrefab) as GameObject;
         mapGenerator = GetComponent<MapGenerator>();
+        uiManager = GetComponent<UIManager>();
     }
     void Start()
     {
         spawner = GameObject.Find(GameObjectName.Spawner).GetComponent<Spawner>();
         PlacePlayer();
+        uiManager.ShowInformationUI("ROOM ", "1", "Destroy all ennemies. 15 Remaining.");
     }
 
     private void PlacePlayer()

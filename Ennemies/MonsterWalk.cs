@@ -15,6 +15,7 @@ public class MonsterWalk : MonsterEntity
     private Vector2? patrolTarget;
     private Vector2 patrolStart;
     public int patrolDistance = 5;
+    public int patrolAroundDistance = 2;
 
     private Transform target;
     Vector3 currentWaypointGizmo;
@@ -58,12 +59,11 @@ public class MonsterWalk : MonsterEntity
         }
 
         patrolStart = transform.position;
-        patrolTarget = GameManager.instance.mapGenerator.GetCurrentRoom().FindNearEmptyPosition(transform.position, patrolDistance);
+        patrolTarget = GameManager.instance.mapGenerator.GetCurrentRoom().FindNearEmptyPosition(transform.position, patrolAroundDistance);
 
         if (patrolTarget != null)
         {
-            //Debug.Log(patrolTarget.Value);
-            updatePathCoroutine = StartCoroutine(UpdatePath(patrolTarget.Value));
+            updatePathCoroutine = StartCoroutine(UpdatePath(new PathTarget(patrolTarget.Value)));
         }
     }
 
@@ -77,9 +77,7 @@ public class MonsterWalk : MonsterEntity
         {
             StopCoroutine(updatePathCoroutine);
         }
-
-        //attention ici ne  pas mettre un vector2 mais un transform sinon on perd la modif en temps reel du transofmr
-        updatePathCoroutine = StartCoroutine(UpdatePath(target.position));
+        updatePathCoroutine = StartCoroutine(UpdatePath(new PathTarget(target.transform)));
     }
 
     void StartIdle()
@@ -272,13 +270,13 @@ public class MonsterWalk : MonsterEntity
         }
     }
 
-    private IEnumerator UpdatePath(Vector2 target)
+    private IEnumerator UpdatePath(PathTarget pathTarget)
     {
         while (true)
         {
-            if (target != null)
+            if (pathTarget != null)
             {
-                PathfindingManager.getInstance().RequestPath(transform.position, target, GameManager.instance.GetCurrentGrid(), OnPathFound);
+                PathfindingManager.getInstance().RequestPath(transform.position, pathTarget.GetTarget(), GameManager.instance.GetCurrentGrid(), OnPathFound);
             }
 
             yield return new WaitForSeconds(0.25f);
@@ -303,6 +301,33 @@ public class MonsterWalk : MonsterEntity
         {
             path = null;
         }
+    }
+
+    class PathTarget
+    {
+        Transform mobileTarget = null;
+        Vector2? fixedTarget = null;
+
+        public PathTarget(Vector2 fixedTarget)
+        {
+            this.fixedTarget = fixedTarget;
+        }
+        public PathTarget(Transform mobileTarget)
+        {
+            this.mobileTarget = mobileTarget;
+        }
+        public Vector2 GetTarget()
+        {
+            if (mobileTarget == null)
+            {
+                return fixedTarget.Value;
+            }
+            else
+            {
+                return mobileTarget.position;
+            }
+        }
+
     }
 
     public void OnDrawGizmos()
@@ -341,3 +366,5 @@ public class MonsterWalk : MonsterEntity
 
     }
 }
+
+

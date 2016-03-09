@@ -57,12 +57,13 @@ public class Spawner : MonoBehaviour
     //Collision sans rigidbody with raycast ?
 
 
-
     //ui bars (hud)
-    //ui event text
-    //game item life
-    //game item 
+    //ui event text TODO EVENT LIKE AMAZING/KILLINGSPREE a la cs !
+
+    //game item flash / jewels
     //barel with acid cloud-fog
+
+    //manque level sur hud...
 
     void Start()
     {
@@ -70,7 +71,7 @@ public class Spawner : MonoBehaviour
         map = GameManager.instance.mapGenerator;
 
         PlaceAllObjects(
-            quantity: new RandomInt(5,10),
+            quantity: new RandomInt(5, 10),
             width: new RandomInt(1, 1),
             height: new RandomInt(1, 1),
             objectToInstanciate: healthItem,

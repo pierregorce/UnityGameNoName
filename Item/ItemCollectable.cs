@@ -30,7 +30,6 @@ public class ItemCollectable : MonoBehaviour
         
         while (percent <= 1)
         {
-
             percent += Time.deltaTime * speed;
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
             transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);

@@ -9,6 +9,10 @@ public class PlayerController : PhysicalEntities
     public GameObject bloodParticle;
     private Mortality mortality;
 
+    [HideInInspector]
+    public int initialXp = 0;
+    [HideInInspector]
+    public int currentXp = 0;
 
     void Start()
     {
@@ -18,6 +22,10 @@ public class PlayerController : PhysicalEntities
         // GameObject.Find("UI Life Text").GetComponent<Text>().text = "150/150";
 
         mortality.OnHealthDown += OnLoseLife;
+
+        GameManager.instance.uiManager.SetLife(mortality.health, mortality.health);
+        GameManager.instance.uiManager.SetXp(currentXp, currentXp);
+
     }
 
     void OnLoseLife(int value)
@@ -27,24 +35,9 @@ public class PlayerController : PhysicalEntities
             Instantiate(bloodParticle, transform.position, Quaternion.identity);
         }
 
-        //Debug.Log("Player touch ma vie est de " + mortality.health + " / " + mortality.initialHealth);
         GetComponent<PlayerItemController>().LooseLife(value);
-
-        // GameObject.Find("UI Life Text").GetComponent<Text>().text = mortality.health + "/" + mortality.initialHealth;
-
-        //GameObject canvasText = Instantiate(canvasFloatingText);
-
-        //float randomX = Random.Range(-0.6f, 0.6f);
-        //float randomY = Random.Range(-0.6f, 0.6f);
-
-        //canvasText.transform.position = transform.position + new Vector3(randomX, randomY, 0);
-        //canvasText.GetComponent<Animator>().SetTrigger("Item");
-
-        //canvasText.transform.Find("Item").GetComponent<Text>().text = "+" + gold;
-
-        //Destroy(canvasText, 1.5f);
     }
-    
+
     protected override void Update()
     {
         base.Update();
