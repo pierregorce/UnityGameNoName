@@ -46,13 +46,17 @@ public class Particle : MonoBehaviour
     public float scaleMin = 0.95f;
     public float scaleMax = 1.05f;
 
+    [Header("Color")]
+    public float alphaMin = 1f;
+    public float alphaMax = 1f;
+
     void Start()
     {
         float x = Random.Range(xForceMin, xForceMax);
         float y = Random.Range(yForceMin, yForceMax);
 
         float s = Random.Range(scaleMin, scaleMax);
-        transform.localScale = new Vector3(s, s);
+        transform.localScale = new Vector3(s * transform.localScale.x, s * transform.localScale.y);
 
         GetComponent<Rigidbody2D>().drag = linearDrag;
         if (isTorque)
@@ -63,6 +67,11 @@ public class Particle : MonoBehaviour
         bounceNumber = Random.Range(reboundMin, reboundMax);
         BounceTimes(bounceNumber);
         GetComponent<SpriteRenderer>().sprite = textures[Random.Range(0, textures.Length)];
+
+        float a = Random.Range(alphaMin, alphaMax);
+        Color color = GetComponent<SpriteRenderer>().color;
+        color.a = a;
+        GetComponent<SpriteRenderer>().color = color;
 
         Destroy(gameObject, Random.Range(lifeTimeMin, lifeTimeMax));
     }

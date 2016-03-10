@@ -21,7 +21,7 @@ public class HealthItem : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Pickup");
 
 
-            other.GetComponent<PlayerItemController>().GainLife(lifeGift);
+            other.GetComponent<PlayerStatsController>().GainLife(lifeGift);
 
             StartCoroutine(DeadEffect());
             active = false;

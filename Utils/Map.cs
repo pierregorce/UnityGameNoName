@@ -256,38 +256,12 @@ public class MapUtils
         Tiles current = map[x, y];
         if (current == Tiles.Wall)
         {
-
-
-
-
-
-            // 3 Floor
-            //4
-            //5
-            //6
-            //7
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_6";
-
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_8";
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_9";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_10";
-
-
-            //8
-            //1 wall autour de plein de floor
-            // 2 walls
-
-
-
-
-
             //----------- ANGLES (8)
 
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: Tiles.Wall, sudEst: Tiles.Floor, sud: Tiles.Wall, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_1";
 
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: Tiles.Wall, sudOuest: Tiles.Floor, ouest: Tiles.Wall, nordOuest: null)) return "tiles_3";
+
 
 
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: Tiles.Floor, sudEst: Tiles.Floor, sud: Tiles.Floor, sudOuest: null, ouest: Tiles.Wall, nordOuest: null)) return "tiles_7";
@@ -296,83 +270,31 @@ public class MapUtils
 
 
 
+
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: Tiles.Floor, est: Tiles.Wall, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_18";
 
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: Tiles.Floor, est: Tiles.Floor, sudEst: null, sud: Tiles.Wall, sudOuest: null, ouest: Tiles.Wall, nordOuest: null)) return "tiles_19";
+
 
 
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: null, est: Tiles.Wall, sudEst: null, sud: Tiles.Wall, sudOuest: null, ouest: Tiles.Floor, nordOuest: Tiles.Floor)) return "tiles_21";
 
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Wall, nordOuest: Tiles.Floor)) return "tiles_23";
 
-
-
-
-
             // ---------------- STRAIGHT (4)
 
             //Mur droit haut
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor)) return "tiles_32";
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_32";
             //Mur droit gauche
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_12";
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: Tiles.Floor, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_12";
             //Mur droit droite
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor)) return "tiles_17";
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Floor, nordOuest: null)) return "tiles_17";
             //Mur droit bas
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall)) return "tiles_2";
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: Tiles.Floor, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_2";
             //ALL
             //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_30";
 
-
-
-
-
-
-            //if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_1";
-            //if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_1";
-            //if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_1";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall)) return "tiles_3";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_6";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_7";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall)) return "tiles_9";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall)) return "tiles_11";
-
-
-
-
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_18";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_19";
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_21";
-
-
-
-
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_3";
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_3";
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_3";
-
-
-
-
-
             if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_30";
-
-
-
-
-
-
 
             //Si non trouvé placeholder
             return "tiles_0";
@@ -405,45 +327,24 @@ public class MapUtils
                 }
             }
 
+            if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Wall, nordOuest: Tiles.Floor)) return "tiles_20";
 
-            //string[] floors = { "tiles_37", "tiles_38", "tiles_43", "tiles_44", "tiles_49", "tiles_55", "tiles_61" };
+            if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Wall, nordOuest: Tiles.Wall)) return "tiles_8";
 
+            if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Floor, nordOuest: Tiles.Floor)) return "tiles_15";
 
+            if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Floor, nordOuest: Tiles.Wall)) return "tiles_14";
 
-            //Floor ombre haut
-            if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall)) return "tiles_13";
-            if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall)) return "tiles_13";
-            if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall)) return "tiles_13";
-            if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Floor, Tiles.Wall)) return "tiles_13";
-            if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor, Tiles.Wall)) return "tiles_13";
+            if  (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_13";
 
-            //Foor ombre coté (uniquement celui de gauche à une ombre)
-            if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_26";
+            if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Wall, nordOuest: null)) return "tiles_26";
 
 
-            //Floor mur en dessous
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Floor)) return "tiles_28";
-
-
-
-            //Floor avec que des wall autour
+            //Floor avec que des wall autour = INTERDIT
             if (CheckTilesNeighbours(map, x, y, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall, Tiles.Wall)) return "tiles_40";
 
-
-
-            //ALL
-            //if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor)) return "tiles_43";
-            if (CheckTilesNeighbours(map, x, y, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor, Tiles.Floor))
-                return floorbase;
-            //return floors[Random.Range(0, floors.Length)];
-
-
-
-            //return floors[Random.Range(0, floors.Length)];
             return floorbase;
-
         }
-
 
         //Si tiletype non géré : placeholder
         return "tiles_0";

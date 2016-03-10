@@ -8,6 +8,7 @@ public class PhysicalEntities : MonoBehaviour
     public float moveSpeed = 3.5f;
     public float drag = 20f;
     public bool logMovement = false;
+    public Vector2 currentDirection { get; private set; }
     protected Vector2 moveVelocity = Vector2.zero;
     protected Vector2 additionnalVelocity = Vector2.zero;
     public bool bumpSensible = true;
@@ -38,6 +39,9 @@ public class PhysicalEntities : MonoBehaviour
             Debug.Log("Velocity " + moveVelocity + " - Additionnal : " + additionnalVelocity);
         }
         GetComponent<Rigidbody2D>().velocity = new Vector2(additionnalVelocity.x + moveVelocity.x, additionnalVelocity.y + moveVelocity.y);
+
+        currentDirection = new Vector2(transform.position.x + moveVelocity.x, transform.position.y + moveVelocity.y) - (Vector2)transform.position;
+        currentDirection.Normalize();
     }
 
 }

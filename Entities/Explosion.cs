@@ -11,7 +11,7 @@ public class ColorChance
     public int chance;
 }
 
-public class Explosion_1 : MonoBehaviour
+public class Explosion : MonoBehaviour
 {
     private List<string> triggers = new List<string>() {
         "Type1", "Type2", "Type3"

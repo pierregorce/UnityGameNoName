@@ -8,7 +8,6 @@ public class MonsterEntity : PhysicalEntities
     public float timeBetweenAttacks = 1;
     public int baseAttackDamage  = 5;
     public int seekDistance = 5;
-    public int xpValue = 100;
 
     [Header("Helper")]
     public bool isGizmos = true;
@@ -34,7 +33,6 @@ public class MonsterEntity : PhysicalEntities
         mortality.OnDeath -= OnDeath;
         mortality.OnHealthDown -= OnHealthDown;
         //todo animation & placeholder
-        GameManager.instance.player.GetComponent<PlayerItemController>().GainXp(xpValue);
         Destroy(gameObject);
     }
 

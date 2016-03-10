@@ -2,9 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerItemController : MonoBehaviour
+public class PlayerStatsController : MonoBehaviour
 {
     //rename en playerStat plutot...
+
     public GameObject canvasFloatingText;
     private Mortality mortality;
 
@@ -33,7 +34,10 @@ public class PlayerItemController : MonoBehaviour
 
         canvasText.transform.Find("Item").GetComponent<Text>().text = "+" + gold;
 
+        GainMoney(gold);
+
         Destroy(canvasText, 1.5f);
+
     }
 
     public void GainLife(int life)
@@ -59,7 +63,6 @@ public class PlayerItemController : MonoBehaviour
 
     public void LooseLife(int life)
     {
-
         //Ajout la vie déja retranché par le composant mortality qui appelle cette méthode
         GameManager.instance.uiManager.SetLife(mortality.health + life, mortality.health);
 
@@ -84,6 +87,14 @@ public class PlayerItemController : MonoBehaviour
         GameManager.instance.uiManager.SetXp(GetComponent<PlayerController>().currentXp, GetComponent<PlayerController>().currentXp + xp);
         //todo combat texte
     }
+    public void GainMoney(int money)
+    {
+        GameManager.instance.uiManager.SetMoney(GetComponent<PlayerController>().currentMoney, GetComponent<PlayerController>().currentMoney + money);
+
+    }
+
+
+
 
     public int GetRequiertXP(int level)
     {
@@ -112,5 +123,7 @@ public class PlayerItemController : MonoBehaviour
         }
         return 0;
     }
+
+
 
 }

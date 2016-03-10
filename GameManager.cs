@@ -29,7 +29,9 @@ public class GameManager : MonoBehaviour
     {
         spawner = GameObject.Find(GameObjectName.Spawner).GetComponent<Spawner>();
         PlacePlayer();
-        uiManager.ShowInformationUI("ROOM ", "1", "Destroy all ennemies. 15 Remaining.");
+        uiManager.ShowInformationUI("START", "ROOM 1", "Destroy all ennemies. 15 Remaining.");
+        uiManager.SetMonsterProgress(10, 10);
+        uiManager.SetRoomProgress(9, 1);
     }
 
     private void PlacePlayer()

@@ -4,6 +4,8 @@ using System.Collections;
 public class Mortality : MonoBehaviour {
 
     public int initialHealth = 100;
+    public int xpValue = 100;
+
     public int health { get; private set; }
     public bool dead { get; private set; }
 
@@ -16,7 +18,6 @@ public class Mortality : MonoBehaviour {
     public event OnHealthDownEvent OnHealthDown = delegate { };
 
     public GameObject deadPlaceholder;
-
 
     void Start()
     {
@@ -52,7 +53,17 @@ public class Mortality : MonoBehaviour {
                 float s = Random.Range(0.8f, 1.2f);
                 placeholderClone.transform.localScale = new Vector3(placeholderClone.transform.localScale.x * s, placeholderClone.transform.localScale.y * s, placeholderClone.transform.localScale.z);
                 Destroy(placeholderClone, 20);
+                
             }
+
+            if (xpValue>0)
+            {
+                GameManager.instance.player.GetComponent<PlayerController>().currentXp += xpValue;
+                GameManager.instance.player.GetComponent<PlayerStatsController>().GainXp(xpValue);
+
+            }
+
+
             OnDeath();
 
         }
