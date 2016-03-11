@@ -6,20 +6,20 @@ public class UIManager : MonoBehaviour
 
     private int targetLife;
     private int orginalLife;
-
     GameObject lifeText;
     GameObject lifeBar;
 
-
     private int targetXp;
     private int orginalXp;
-
     GameObject xpText;
     GameObject xpBar;
 
+    private int orginalMoney;
+    private int targetMoney;
     GameObject moneyQuantityText;
 
     GameObject progressRoomText;
+    GameObject progressMonterText;
 
 
     void Start()
@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour
         moneyQuantityText = GameObject.Find("MoneyQuantityText");
 
         progressRoomText = GameObject.Find("ProgressRoomText");
+        progressMonterText = GameObject.Find("ProgressMonsterText");
 
     }
 
@@ -40,10 +41,10 @@ public class UIManager : MonoBehaviour
     {
         EaseLife();
         EaseXp();
+        EaseMoney();
     }
 
     private float timeElapsedLife;
-
 
     void EaseLife()
     {
@@ -70,11 +71,10 @@ public class UIManager : MonoBehaviour
 
     private float timeElapsedXp;
 
-
     void EaseXp()
     {
-        int level = GameManager.instance.player.GetComponent<PlayerItemController>().GetLevelForXP(targetXp);
-        int maxXp = GameManager.instance.player.GetComponent<PlayerItemController>().GetSumXpForLevel(level);
+        int level = GameManager.instance.player.GetComponent<PlayerStatsController>().GetLevelForXP(targetXp);
+        int maxXp = GameManager.instance.player.GetComponent<PlayerStatsController>().GetSumXpForLevel(level);
 
         timeElapsedXp += Time.deltaTime;
 
@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
         /// delay = duration
         /// offset = startValue
 
-        float variation = targetXp- orginalXp;
+        float variation = targetXp - orginalXp;
         float elapsed = timeElapsedXp;
         float delay = 0.7f;
         float offset = orginalXp;
@@ -95,6 +95,27 @@ public class UIManager : MonoBehaviour
         xpBar.GetComponent<UnityEngine.UI.Image>().fillAmount = Mathf.Clamp01(finalXp / maxXp);
     }
 
+    private float timeElapsedMoney;
+
+    void EaseMoney()
+    {
+        timeElapsedMoney += Time.deltaTime;
+
+        //Ease
+        /// variation = change in value
+        /// elapsed = current time
+        /// delay = duration
+        /// offset = startValue
+
+        float variation = targetMoney - orginalMoney;
+        float elapsed = timeElapsedMoney;
+        float delay = 0.7f;
+        float offset = orginalMoney;
+
+        float finalMoney = Ease.CubicOut(variation, elapsed, delay, offset);
+
+        moneyQuantityText.GetComponent<UnityEngine.UI.Text>().text = ((int) finalMoney).ToString();
+    }
 
     public void SetLife(int orginalLife, int targetLife)
     {
@@ -108,6 +129,24 @@ public class UIManager : MonoBehaviour
         this.targetXp = targetXp;
         this.orginalXp = orginalXp;
         timeElapsedXp = 0;
+    }
+
+    public void SetMoney(int orginalMoney, int targetMoney)
+    {
+        this.targetMoney = targetMoney;
+        this.orginalMoney = orginalMoney;
+        timeElapsedMoney = 0;
+    }
+
+
+    public void SetMonsterProgress(int totalQuantity, int remainingQuantity)
+    {
+        progressMonterText.GetComponent<UnityEngine.UI.Text>().text = remainingQuantity + "/" + totalQuantity;
+    }
+
+    public void SetRoomProgress(int totalRoom, int currentRoom)
+    {
+        progressRoomText.GetComponent<UnityEngine.UI.Text>().text = currentRoom + "/" + totalRoom;
     }
 
     /// <summary>

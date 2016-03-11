@@ -25,7 +25,7 @@ public class Particle : MonoBehaviour
     public int xForceMin = -150;
     [Range(1, 500)]
     public int xForceMax = 150;
-    [Range(-200, -1)]
+    [Range(-200, 100)]
     public int yForceMin = -50;
     [Range(1, 200)]
     public int yForceMax = 50;
@@ -45,6 +45,7 @@ public class Particle : MonoBehaviour
     [Header("Scale")]
     public float scaleMin = 0.95f;
     public float scaleMax = 1.05f;
+
 
     [Header("Color")]
     public float alphaMin = 1f;

@@ -5,12 +5,14 @@ public class Spike : MonoBehaviour
 {
 
     private float nextEventTime;
-    private float timeBetweenEvent = 1.5f;
+    public float timeBetweenEvent = 1.5f;
 
     private float nextAttackTime;
-    private float timeBetweenAttack = 0.6f;
+    public float timeBetweenAttack = 0.6f;
 
-    private int baseAttackDamage = 15;
+    public int baseAttackDamage = 15;
+
+    private Animator animator;
 
     enum State
     {
@@ -21,12 +23,8 @@ public class Spike : MonoBehaviour
 
     void Start()
     {
-
-
-
+        animator = GetComponent<Animator>();
     }
-
-
 
     void Update()
     {
@@ -35,7 +33,10 @@ public class Spike : MonoBehaviour
             if (state == State.CLOSE)
             {
                 nextEventTime = Time.time + timeBetweenEvent;
-                GetComponent<Animator>().SetTrigger("Open");
+                if (animator != null)
+                {
+                    GetComponent<Animator>().SetTrigger("Open");
+                }
                 state = State.OPEN;
             }
         }
@@ -45,26 +46,15 @@ public class Spike : MonoBehaviour
             if (state == State.OPEN)
             {
                 nextEventTime = Time.time + timeBetweenEvent;
-                GetComponent<Animator>().SetTrigger("Close");
+                if (animator != null)
+                {
+                    GetComponent<Animator>().SetTrigger("Close");
+                }
                 state = State.CLOSE;
             }
         }
 
     }
-
-
-
-    //void OnTriggerEnter2D(Collider2D other)
-    //{
-    //    characterInQuicksand = true;
-    //}
-
-
-    //void OnTriggerExit2D(Collider2D other)
-    //{
-    //    characterInQuicksand = false;
-    //}
-
 
     void OnTriggerStay2D(Collider2D other)
     {
@@ -103,7 +93,7 @@ public class Spike : MonoBehaviour
             }
             mortality.DecrementHealth(baseAttackDamage);
         }
-        
+
         //// Explosion
         //if (explosion != null)
         //{

@@ -59,15 +59,14 @@ public class Spawner : MonoBehaviour
 
 
 
-
-    //ui bars (hud)
     //ui event text TODO EVENT LIKE AMAZING/KILLINGSPREE a la cs !
 
-    //game item flash / jewels
 
-    //barel with acid cloud-fog + placeholder acid au sol
-    
+    //game item flash / jewels
+    //acid on ground - faire sur les tiles a coté
     // HUD - manque level sur hud + reprendre proprement le easing
+    //hud faire les spells + controls android
+
 
     void Start()
     {
@@ -142,7 +141,8 @@ public class Spawner : MonoBehaviour
             height: new RandomInt(3, 3),
             objectToInstanciate: barel,
             holder: map.transform,
-            type: Tiles.Wall
+            type: Tiles.Wall,
+            placeByCenter: true
             );
 
         PlaceAllObjects(
