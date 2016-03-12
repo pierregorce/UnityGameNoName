@@ -1,14 +1,18 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class Barel : MonoBehaviour {
+public class Barel : MonoBehaviour
+{
 
     private Mortality mortality;
     public GameObject explosion;
     public GameObject smokeParticle;
     public GameObject barelAcid;
-    
+    private float acidDuration = 30f;
+
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         mortality = GetComponent<Mortality>();
         mortality.OnDeath += OnDeath;
     }
@@ -29,8 +33,22 @@ public class Barel : MonoBehaviour {
             Instantiate(smokeParticle, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
         }
 
-        Instantiate(barelAcid, new Vector2(transform.position.x, transform.position.y), Quaternion.identity);
-        //todo add on side tiles
+        GameObject go = Instantiate(barelAcid, new Vector2(transform.position.x, transform.position.y), Quaternion.identity) as GameObject;
+        Destroy(go, acidDuration);
+
+
+        Node currentNode = GameManager.instance.GetCurrentGrid().NodeFromWorldPoint(transform.position);
+        List<Node> o = GameManager.instance.GetCurrentGrid().Get8Neighbours(currentNode);
+
+        foreach (var node in o)
+        {
+            Tiles tileType = GameManager.instance.mapGenerator.GetCurrentRoom().GetMap()[node.gridX, node.gridY];
+            if (tileType == Tiles.Floor)
+            {
+                GameObject go2 = Instantiate(barelAcid, node.worldPosition, Quaternion.identity) as GameObject;
+                Destroy(go2, acidDuration);
+            }
+        }
 
 
 

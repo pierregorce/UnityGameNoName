@@ -107,6 +107,11 @@ public struct TilesPattern
         }
     }
 
+    public TilesPattern(Tiles[,] pattern)
+    {
+        this.pattern = pattern;
+    }
+
     public TilesPattern(int sizeX, int sizeY, Tiles tileType, int borderSize, Tiles borderType)
     {
         //TODO
@@ -335,7 +340,7 @@ public class MapUtils
 
             if (CheckTilesNeighbours(map, x, y, nord: Tiles.Floor, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Floor, nordOuest: Tiles.Wall)) return "tiles_14";
 
-            if  (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_13";
+            if (CheckTilesNeighbours(map, x, y, nord: Tiles.Wall, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: null, nordOuest: null)) return "tiles_13";
 
             if (CheckTilesNeighbours(map, x, y, nord: null, nordEst: null, est: null, sudEst: null, sud: null, sudOuest: null, ouest: Tiles.Wall, nordOuest: null)) return "tiles_26";
 

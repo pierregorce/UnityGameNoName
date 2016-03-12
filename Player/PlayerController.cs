@@ -19,6 +19,9 @@ public class PlayerController : PhysicalEntities
     public float currentSpeedIncrement = 0;
     public float currentSpeedTimeLimit = 0f;
 
+    private float nextAttackTime;
+    public float timeBetweenAttack = 0.3f;
+
     void Start()
     {
         mortality = GetComponent<Mortality>();
@@ -76,15 +79,58 @@ public class PlayerController : PhysicalEntities
             moveSpeed = baseSpeed + baseSpeed * currentSpeedIncrement;
         }
 
-
         base.Update();
+
+
+
+        if (Time.time > nextAttackTime)
+        {
+            nextAttackTime = Time.time + timeBetweenAttack;
+        }
+            AttackBrain();
+
+        //Move Input
+        //float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveHorizontal = CnControls.CnInputManager.GetAxis("Horizontal");
+        //float moveVertical = Input.GetAxis("Vertical");
+        float moveVertical = CnControls.CnInputManager.GetAxis("Vertical");
+
+        Vector2 moveInput = new Vector2(moveHorizontal, moveVertical);
+        Vector2 moveVelocity = moveInput.normalized * moveSpeed;
+        this.moveVelocity = moveVelocity;
+
+        //Pas de modificatin si move = 0
+        if (moveHorizontal > 0)
+        {
+            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_RIGHT;
+        }
+        if (moveHorizontal < 0)
+        {
+            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_LEFT;
+        }
+    }
+
+
+
+    void AttackBrain()
+    {
         //Fire Input
-        if (Input.GetMouseButtonDown(0))
+
+        float baseShootHorizontal = CnControls.CnInputManager.GetAxis("HorizontalShoot");
+        float baseShootVertical = CnControls.CnInputManager.GetAxis("VerticalShoot");
+        Debug.Log("baseShootHorizontal : " + baseShootHorizontal + "--- baseShootVertical : " + baseShootVertical);
+
+        if (baseShootHorizontal != 0f || baseShootVertical != 0f || Input.GetMouseButtonDown(0))
         {
             //Shoot
             Vector2 target = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
             Vector2 start = transform.position;
-            Vector2 direction = target - start;
+            Vector2 direction = (new Vector2(baseShootHorizontal, baseShootVertical));
+            if (Input.GetMouseButtonDown(0))
+            {
+                direction = target - start;
+            }
+            //Vector2 direction = target - start;
             direction.Normalize();
             Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
@@ -99,7 +145,6 @@ public class PlayerController : PhysicalEntities
             //Bump back
             ApplyForce(-direction * 1.2f);
         }
-
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -129,25 +174,6 @@ public class PlayerController : PhysicalEntities
             //=> select all movable and add force ump back
         }
 
-
-
-        //Move Input
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-
-        Vector2 moveInput = new Vector2(moveHorizontal, moveVertical);
-        Vector2 moveVelocity = moveInput.normalized * moveSpeed;
-        this.moveVelocity = moveVelocity;
-
-        //Pas de modificatin si move = 0
-        if (moveHorizontal > 0)
-        {
-            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_RIGHT;
-        }
-        if (moveHorizontal < 0)
-        {
-            GetComponent<OrientableEntity>().CurrentFacingOrientation = OrientableEntity.FacingOrientation.FACING_LEFT;
-        }
     }
 
 }

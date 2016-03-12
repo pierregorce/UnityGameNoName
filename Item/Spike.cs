@@ -91,7 +91,6 @@ public class Spike : MonoBehaviour
                     nextAttackTime = Time.time + timeBetweenAttack;
                 }
             }
-            mortality.DecrementHealth(baseAttackDamage);
         }
 
         //// Explosion

@@ -18,6 +18,9 @@ public class Mortality : MonoBehaviour {
     public event OnHealthDownEvent OnHealthDown = delegate { };
 
     public GameObject deadPlaceholder;
+    public bool deadPlaceholderRotate = false;
+    public bool deadPlaceholderScale = false;
+    public float deadPlaceholderLife = 20;
 
     void Start()
     {
@@ -43,16 +46,19 @@ public class Mortality : MonoBehaviour {
 
             if (deadPlaceholder != null)
             {
-                int[] rotationAngles = { 0, 90, 180, 270 };
-
                 Vector2 anchor = GameManager.instance.GetCurrentGrid().WorldPointFromNode(transform.position);
-
                 GameObject placeholderClone = Instantiate(deadPlaceholder, anchor, Quaternion.identity) as GameObject;
-
+                if (deadPlaceholderRotate)
+                {
+                int[] rotationAngles = { 0, 90, 180, 270 };
                 placeholderClone.transform.Rotate(new Vector3(0, 0, rotationAngles[Random.Range(0, rotationAngles.Length)]));
+                }
+                if (deadPlaceholderScale)
+                {
                 float s = Random.Range(0.8f, 1.2f);
                 placeholderClone.transform.localScale = new Vector3(placeholderClone.transform.localScale.x * s, placeholderClone.transform.localScale.y * s, placeholderClone.transform.localScale.z);
-                Destroy(placeholderClone, 20);
+                }
+                Destroy(placeholderClone, deadPlaceholderLife);
                 
             }
 

@@ -57,16 +57,19 @@ public class Spawner : MonoBehaviour
     //trap with arrow left to right
     //Collision sans rigidbody with raycast ?
 
-
-
     //ui event text TODO EVENT LIKE AMAZING/KILLINGSPREE a la cs !
+    //spell lazer - blizzard - push à la wizard diablo
 
-
-    //game item flash / jewels
-    //acid on ground - faire sur les tiles a coté
-    // HUD - manque level sur hud + reprendre proprement le easing
-    //hud faire les spells + controls android
-
+    // add game item flash / jewels
+    // add damage shader (full white during x time)
+    // hud - manque level sur hud + reprendre proprement le easing
+    // hud - faire les spells + controls android
+    // add global GCD and spell genericity for player
+    // add dynamic camera as nuclear thrones
+    // add placeholder dead for monster
+    // add barel explosion dmg
+    // add new monster (2) : 1 ennemy who pop other ennemy - 1 tower which throw fire
+    // add gift when monster die
 
     void Start()
     {
