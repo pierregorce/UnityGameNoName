@@ -2,7 +2,12 @@
 using System.Collections;
 using Assets.Scripts.Utils;
 
-
+public enum EnnemyType
+{
+    MONSTER1,
+    MONSTER2,
+    MONSTER_TOTEM_TALL
+}
 
 public struct RandomInt
 {
@@ -24,15 +29,19 @@ public struct RandomInt
 
 public class Spawner : MonoBehaviour
 {
+    [Header("Ennemies")]
     public GameObject monster1;
     public GameObject monster2;
-
-    public GameObject barel;
-    public GameObject brasero;
-    public GameObject pipe;
-    public GameObject totem;
     public GameObject totemTall;
+
+    [Header("Traps")]
+    public GameObject barel;
+    public GameObject pipe;
     public GameObject spike;
+
+    [Header("Decoration")]
+    public GameObject totem;
+    public GameObject brasero;
 
     [Header("Items")]
     public GameObject box;
@@ -58,23 +67,48 @@ public class Spawner : MonoBehaviour
     //Collision sans rigidbody with raycast ?
 
     //ui event text TODO EVENT LIKE AMAZING/KILLINGSPREE a la cs !
-    //spell lazer - blizzard - push à la wizard diablo
 
+
+
+    // refaire anim monster 1
+    // spell lazer - blizzard - push à la wizard diablo
     // add game item flash / jewels
-    // add damage shader (full white during x time)
-    // hud - manque level sur hud + reprendre proprement le easing
+    // add placeholder dead for monster
     // hud - faire les spells + controls android
+    // add new monster (2) : 1 ennemy who pop other ennemy - 1 tower which throw fire
+
+    // hud - manque level sur hud + reprendre proprement le easing
+    // add damage shader (full white during x time)
     // add global GCD and spell genericity for player
     // add dynamic camera as nuclear thrones
-    // add placeholder dead for monster
     // add barel explosion dmg
-    // add new monster (2) : 1 ennemy who pop other ennemy - 1 tower which throw fire
     // add gift when monster die
 
-    void Start()
-    {
 
-        map = GameManager.instance.mapGenerator;
+    public void Spawn(LevelData levelData)
+    {
+        //Pop Monster
+
+        int ennemyQuantity = GetEnnemyTotal(levelData);
+
+        foreach (var ennemy in levelData.roomMonsters)
+        {
+            int quantity = ennemyQuantity * ennemy.proportion / 100;
+
+            PlaceAllObjects(
+                quantity: new RandomInt(quantity, quantity),
+                width: new RandomInt(3, 3),
+                height: new RandomInt(3, 3),
+                objectToInstanciate: GetEnnemy(ennemy.monsterType),
+                holder: map.transform,
+                type: Tiles.Floor,
+                marginSize: 0,
+                itemSize: new Vector2(1, 2),
+                placeByCenter: true
+            );
+
+
+        }
 
         PlaceAllObjects(
             quantity: new RandomInt(4, 7),
@@ -98,15 +132,15 @@ public class Spawner : MonoBehaviour
             placeByCenter: true
         );
 
-        PlaceAllObjects(
-            quantity: new RandomInt(2, 4),
-            width: new RandomInt(3, 3),
-            height: new RandomInt(4, 4),
-            objectToInstanciate: totemTall,
-            holder: map.transform,
-            type: Tiles.Wall,
-            itemSize: new Vector2(1, 2)
-        );
+        //PlaceAllObjects(
+        //    quantity: new RandomInt(2, 4),
+        //    width: new RandomInt(3, 3),
+        //    height: new RandomInt(4, 4),
+        //    objectToInstanciate: totemTall,
+        //    holder: map.transform,
+        //    type: Tiles.Wall,
+        //    itemSize: new Vector2(1, 2)
+        //);
 
         PlaceAllObjects(
             quantity: new RandomInt(10, 15),
@@ -176,14 +210,14 @@ public class Spawner : MonoBehaviour
             itemSize: new Vector2(3, 1)
             );
 
-        PlaceAllObjects(
-            quantity: new RandomInt(1, 1),
-            width: new RandomInt(3, 3),
-            height: new RandomInt(3, 3),
-            objectToInstanciate: monster1,
-            holder: map.transform,
-            type: Tiles.Floor
-            );
+        //PlaceAllObjects(
+        //    quantity: new RandomInt(10, 20),
+        //    width: new RandomInt(3, 3),
+        //    height: new RandomInt(3, 3),
+        //    objectToInstanciate: monster1,
+        //    holder: map.transform,
+        //    type: Tiles.Floor
+        //    );
 
         //PlaceAllObjects(
         //    quantity: new RandomInt(1, 1),
@@ -196,6 +230,37 @@ public class Spawner : MonoBehaviour
 
 
 
+    }
+
+    public int GetEnnemyRemaining()
+    {
+        //todo faire une variable
+        return 2;
+    }
+    public int GetEnnemyTotal(LevelData levelData)
+    {
+        // todo calcul avec le level
+        return 10;
+    }
+
+    public GameObject GetEnnemy(EnnemyType ennemyType)
+    {
+        switch (ennemyType)
+        {
+            case EnnemyType.MONSTER1:
+                return monster1;
+            case EnnemyType.MONSTER2:
+                return monster2;
+            case EnnemyType.MONSTER_TOTEM_TALL:
+                return totemTall;
+            default:
+                return null;
+        }
+    }
+
+    void Start()
+    {
+        map = GameManager.instance.mapGenerator;
     }
 
     void Update()

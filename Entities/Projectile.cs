@@ -8,7 +8,7 @@ public class Projectile : MonoBehaviour
     public int bumpForce = 3;
     public int damage = 5;
     public GameObject explosion;
-
+    [HideInInspector]
     public GameObject sender;
 
     void Start()

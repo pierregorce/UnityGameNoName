@@ -25,12 +25,14 @@ public class ItemDestroyable : MonoBehaviour
         //todo reprendre le sprite sans le font aussi !
 
         //Particle Explosion
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 8; i++)
         {
             float pX = Random.Range(-0.2f, 0.2f);
             float pY = Random.Range(-0.2f, 0.2f);
 
-            GameObject p = Instantiate(particle, new Vector3(transform.position.x + pX + 0.5f, transform.position.y + pY + 0.5f, 0), Quaternion.identity) as GameObject;
+            GameObject test = ObjectPool.instance.GetPooledObject(particle);
+            test.SetActive(true);
+            GameObject p = Instantiate(test, new Vector3(transform.position.x + pX + 0.5f, transform.position.y + pY + 0.5f, 0), Quaternion.identity) as GameObject;
 
             //float s = Random.Range(0.4f, 0.4f);
             //p.transform.localScale = new Vector3(s, s);
@@ -48,7 +50,6 @@ public class ItemDestroyable : MonoBehaviour
 
     }
 
-
-
+ 
 
 }

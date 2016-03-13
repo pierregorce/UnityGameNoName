@@ -5,15 +5,15 @@ using Assets.Scripts.Utils;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject playerPrefab;
-    public GameObject player
-    {
-        get; private set;
-    }
 
-    public MapGenerator mapGenerator;
-    public UIManager uiManager;
+    public GameObject playerPrefab;
+    public LevelData levelData;
+
+    public GameObject player { get; private set; }
+    public MapGenerator mapGenerator { get; private set; }
+    public UIManager uiManager { get; private set; }
     private Spawner spawner;
+
     public static GameManager instance { get; private set; }
 
     private List<Vector2> patternPosition;
@@ -24,14 +24,17 @@ public class GameManager : MonoBehaviour
         player = Instantiate(playerPrefab) as GameObject;
         mapGenerator = GetComponent<MapGenerator>();
         uiManager = GetComponent<UIManager>();
+        mapGenerator.Generate(levelData);
     }
+
     void Start()
     {
         spawner = GameObject.Find(GameObjectName.Spawner).GetComponent<Spawner>();
+        spawner.Spawn(levelData);
         PlacePlayer();
-        uiManager.ShowInformationUI("START", "ROOM 1", "Destroy all ennemies. 15 Remaining.");
-        uiManager.SetMonsterProgress(10, 10);
-        uiManager.SetRoomProgress(9, 1);
+        uiManager.ShowInformationUI("START", "ROOM " + mapGenerator.GetCurrentRoomIndex(), "Destroy all ennemies. " + spawner.GetEnnemyRemaining() + " Remaining.");
+        uiManager.SetMonsterProgress(spawner.GetEnnemyTotal(levelData), spawner.GetEnnemyRemaining());
+        uiManager.SetRoomProgress(mapGenerator.GetRoomCount(), mapGenerator.GetCurrentRoomIndex());
     }
 
     private void PlacePlayer()
@@ -49,35 +52,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Tiles[,] GetCurrentMap()
-    {
-        if (mapGenerator != null)
-        {
-            return mapGenerator.GetCurrentRoom().GetMap();
-        }
-        return null;
-    }
-
     public Grid GetCurrentGrid()
     {
         if (mapGenerator != null)
         {
-            return new Grid(GetCurrentMap(), mapGenerator.GetCurrentRoom().GetRect().position);
+            return new Grid(mapGenerator.GetCurrentMap(), mapGenerator.GetCurrentRoom().GetRect().position);
         }
         return null;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            // patternPosition = map.GetCurrentRoom().FindRandomPattern(new TilesPattern(size, size, Tiles.Floor).pattern);
-        }
+
     }
 
     public void OnDrawGizmos()
     {
-        Tiles[,] t = GetCurrentMap();
+        if (mapGenerator == null)
+        {
+            return;
+        }
+        Tiles[,] t = mapGenerator.GetCurrentMap();
 
         t = null;
 

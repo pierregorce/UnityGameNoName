@@ -19,9 +19,8 @@ public class MapGenerator : MonoBehaviour
     [Range(30, 150)]
     public int heightMax = 100;
     [Range(0, 10)]
-    public int roomQuantity = 4;
+    private int roomQuantity = 4;
 
-    //TODO CHILD ROOM NUMBER a remonter ici
     [Range(4, 12)]
     public int roomChildQuantityMin = 6;
     [Range(4, 12)]
@@ -29,18 +28,13 @@ public class MapGenerator : MonoBehaviour
 
 
     [Header("Map Texture")]
-    //public Texture2D[] wallTexture;
-    //public Texture2D[] floorTexture;
-
-    //public Sprite[] tilesWallTexture;
-    //public Sprite[] tilesFloorTexture;
-
     public Sprite[] mapSprites;
     private Dictionary<string, Texture2D> mapTextures;
-
+    [Header("Decoration")]
     public GameObject torch;
 
-    void Awake()
+
+    public void Generate(LevelData levelData)
     {
         mapTextures = new Dictionary<string, Texture2D>();
         //Toutes les textures se trouveront dans ce tableau avec pour clé le nom du sprite attribué lors de la découpe par unity.
@@ -51,28 +45,48 @@ public class MapGenerator : MonoBehaviour
             texture.SetPixels(sprite.texture.GetPixels((int)sprite.rect.x, (int)sprite.rect.y, (int)sprite.rect.width, (int)sprite.rect.height));
             mapTextures.Add(sprite.name, texture);
         }
-
+        SetRoomData(levelData);
         GenerateMap();
+
     }
 
 
-    void Update()
-    {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    DestroyMap();
-        //    GenerateMap();
-        //}
-    }
+
+    #region "Public Room Utils"
 
     public Room GetCurrentRoom()
     {
-        return rooms[0]; //todo prendre en compte position player
+        return rooms[GetCurrentRoomIndex()];
     }
 
-    public ChildRoom GetInitialPop()
+    public int GetRoomCount()
     {
-        return GetCurrentRoom().childs[0];
+        return rooms.Count;
+    }
+
+    public int GetCurrentRoomIndex()
+    {
+        foreach (var room in rooms)
+        {
+            if (room.GetRect().Contains(GameManager.instance.player.transform.position))
+            {
+                return rooms.IndexOf(room);
+            }
+        }
+        return -1;
+    }
+
+    public Tiles[,] GetCurrentMap()
+    {
+        return GetCurrentRoom().GetMap();
+    }
+
+    #endregion
+
+    private void SetRoomData(LevelData levelData)
+    {
+        roomQuantity = levelData.roomQuantity;
+
     }
 
     private void GenerateMap()
@@ -286,7 +300,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (MapUtils.Get4Neighbours(map, x, y).Where(m => map[m.x, m.y] == Tiles.Wall).Count() != 4)
                     {
-                        
+
                         BoxCollider2D collider = holder.AddComponent<BoxCollider2D>();
                         collider.size = Vector2.one;
                         collider.offset = new Vector2(x + 0.5f, y + 0.5f);

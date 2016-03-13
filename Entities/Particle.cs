@@ -3,7 +3,7 @@ using System.Collections;
 using Assets.Scripts.Utils;
 using System.Linq;
 
-public class Particle : MonoBehaviour
+public class Particle : MonoBehaviourExtended
 {
     public Sprite[] textures;
 
@@ -74,7 +74,8 @@ public class Particle : MonoBehaviour
         color.a = a;
         GetComponent<SpriteRenderer>().color = color;
 
-        Destroy(gameObject, Random.Range(lifeTimeMin, lifeTimeMax));
+        //Destroy(gameObject, Random.Range(lifeTimeMin, lifeTimeMax));
+        Disable(Random.Range(lifeTimeMin, lifeTimeMax));
     }
 
     //-------------------------- Bounce Effect --------------------
@@ -131,6 +132,7 @@ public class Particle : MonoBehaviour
             }
         }
     }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         bool stopped = false;
@@ -151,6 +153,12 @@ public class Particle : MonoBehaviour
 
         //ItemDestroyable itemDestroyable = other.GetComponent<ItemDestroyable>();
     }
+
+
+
+
+
+
 
 
 }

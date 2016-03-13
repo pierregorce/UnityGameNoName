@@ -6,6 +6,7 @@ public class PlayerController : PhysicalEntities
 {
     [Header("Common")]
     public GameObject bolt;
+    public GameObject boltNova;
     public GameObject bloodParticle;
     public GameObject speedParticle;
     private Mortality mortality;
@@ -34,7 +35,6 @@ public class PlayerController : PhysicalEntities
         GameManager.instance.uiManager.SetLife(mortality.health, mortality.health);
         GameManager.instance.uiManager.SetXp(currentXp, currentXp);
         GameManager.instance.uiManager.SetMoney(currentMoney, currentMoney);
-
     }
 
     void OnLoseLife(int value)
@@ -80,16 +80,10 @@ public class PlayerController : PhysicalEntities
         }
 
         base.Update();
-
-
-
-        if (Time.time > nextAttackTime)
-        {
-            nextAttackTime = Time.time + timeBetweenAttack;
-        }
-            AttackBrain();
+        AttackBrain();
 
         //Move Input
+
         //float moveHorizontal = Input.GetAxis("Horizontal");
         float moveHorizontal = CnControls.CnInputManager.GetAxis("Horizontal");
         //float moveVertical = Input.GetAxis("Vertical");
@@ -112,68 +106,106 @@ public class PlayerController : PhysicalEntities
 
 
 
+    public void SpellButtonEvent(string buttonIndex)
+    {
+        Spell spell;
+        switch (buttonIndex)
+        {
+            case "0":
+                spell = GameObject.Find("SpellButton0").GetComponent<Spell>();
+                if (spell.CanDoSpell())
+                {
+                    spell.DoSpell();
+                    Spell_Bolt();
+                }
+                break;
+            case "1":
+                spell = GameObject.Find("SpellButton1").GetComponent<Spell>();
+                if (spell.CanDoSpell())
+                {
+                    spell.DoSpell();
+                    Spell_Nova();
+                }
+                break;
+            case "2":
+                break;
+            default:
+                break;
+        }
+    }
+
     void AttackBrain()
     {
         //Fire Input
-
         float baseShootHorizontal = CnControls.CnInputManager.GetAxis("HorizontalShoot");
         float baseShootVertical = CnControls.CnInputManager.GetAxis("VerticalShoot");
-        Debug.Log("baseShootHorizontal : " + baseShootHorizontal + "--- baseShootVertical : " + baseShootVertical);
 
         if (baseShootHorizontal != 0f || baseShootVertical != 0f || Input.GetMouseButtonDown(0))
         {
-            //Shoot
-            Vector2 target = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-            Vector2 start = transform.position;
-            Vector2 direction = (new Vector2(baseShootHorizontal, baseShootVertical));
-            if (Input.GetMouseButtonDown(0))
-            {
-                direction = target - start;
-            }
-            //Vector2 direction = target - start;
-            direction.Normalize();
-            Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
-
-            //Send Projectile
-            GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
-            projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
-            projectile.GetComponent<Projectile>().sender = gameObject;
-
-            //Camera Shake
-            Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.PerlinLevel1);
-
-            //Bump back
-            ApplyForce(-direction * 1.2f);
+            SpellButtonEvent("0");
         }
 
         if (Input.GetMouseButtonDown(1))
         {
-            //Shoot spell 2 : nova
-            int j = Random.Range(10, 30);
-            for (int i = 0; i < 360; i += j)
-            {
-                Quaternion rotation = Quaternion.AngleAxis(i, Vector3.forward);
-                Vector2 direction = rotation * Vector3.right;
-                GameObject projectile = Instantiate(bolt, transform.position, rotation) as GameObject;
-                projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1200);
-                projectile.GetComponent<Projectile>().sender = gameObject;
-            }
+            SpellButtonEvent("1");
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.F))
+    void Spell_Bolt()
+    {
+        //Fire Input
+        float baseShootHorizontal = CnControls.CnInputManager.GetAxis("HorizontalShoot");
+        float baseShootVertical = CnControls.CnInputManager.GetAxis("VerticalShoot");
+        //Shoot
+        Vector2 target = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+        Vector2 start = transform.position;
+        Vector2 direction = (new Vector2(baseShootHorizontal, baseShootVertical));
+        if (Input.GetMouseButtonDown(0))
         {
-            //Spell 3 : diversion (like wow hunt)
-            GetComponent<PhysicalEntities>().ApplyForce(currentDirection * 20);
-            //add une trainée au sol
+            direction = target - start;
         }
+        //Vector2 direction = target - start;
+        direction.Normalize();
+        Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
-        if (Input.GetKeyDown(KeyCode.G))
+        //Send Projectile
+        GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
+        projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
+        projectile.GetComponent<Projectile>().sender = gameObject;
+
+        //Camera Shake
+        Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.PerlinLevel1);
+
+        //Bump back
+        ApplyForce(-direction * 1.2f);
+    }
+
+    void Spell_Nova()
+    {
+        //Shoot spell 2 : nova
+        int j = Random.Range(5, 20);
+        for (int i = 0; i < 360; i += j)
         {
-            //Spell 4 : repousse (like diablo wizard)
-            //=> select all mortality and add small damage
-            //=> select all movable and add force ump back
+            Quaternion rotation = Quaternion.AngleAxis(i, Vector3.forward);
+            Vector2 direction = rotation * Vector3.right;
+            GameObject projectile = Instantiate(boltNova, transform.position, rotation) as GameObject;
+            projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1200);
+            projectile.GetComponent<Projectile>().sender = gameObject;
         }
+    }
 
+    void Spell_Diversion()
+    {
+        //Spell 3 : diversion (like wow hunt)
+        GetComponent<PhysicalEntities>().ApplyForce(currentDirection * 20);
+        //add une trainée au sol
+    }
+
+    void Spell_KnockBack()
+    {
+        //Spell 4 : repousse (like diablo wizard)
+        //=> select all mortality and add small damage
+        //=> select all movable and add force ump back
     }
 
 }

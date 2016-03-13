@@ -29,7 +29,10 @@ public class ParticleEmitter : MonoBehaviour
             nextEmissionTime = Time.time + timeBeetweenEmission;
             float xPosition = Random.Range(xPositionMin, xPositionMax);
             float yPosition = Random.Range(yPositionMin, yPositionMax);
-            Instantiate(particle, new Vector2(transform.position.x + xPosition, transform.position.y + yPosition), Quaternion.identity);
+
+            GameObject p = ObjectPool.instance.GetPooledObject(particle);
+            p.SetActive(true);
+            Instantiate(p, new Vector2(transform.position.x + xPosition, transform.position.y + yPosition), Quaternion.identity);
         }
     }
 }
