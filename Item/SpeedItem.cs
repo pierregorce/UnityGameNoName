@@ -5,7 +5,7 @@ using Assets.Scripts.Utils;
 public class SpeedItem : MonoBehaviour
 {
     bool active = true;
-    public GameObject particles;
+    public GameObject speedParticle;
 
     void Start()
     {
@@ -25,7 +25,11 @@ public class SpeedItem : MonoBehaviour
 
             for (int i = 0; i < Random.Range(6, 10); i++)
             {
-                Instantiate(particles, transform.position, Quaternion.identity);
+                //Instantiate(particles, transform.position, Quaternion.identity);
+
+                GameObject g = ObjectPool.instance.GetPooledObject(speedParticle);
+                g.GetComponent<Particle>().Init();
+                g.transform.position = transform.position;
             }
 
         }

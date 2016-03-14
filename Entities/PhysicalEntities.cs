@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PhysicalEntities : MonoBehaviour
+public class PhysicalEntities : MonoBehaviourExtended
 {
 
     [Header("Movement")]
@@ -12,6 +12,12 @@ public class PhysicalEntities : MonoBehaviour
     protected Vector2 moveVelocity = Vector2.zero;
     protected Vector2 additionnalVelocity = Vector2.zero;
     public bool bumpSensible = true;
+
+    public override void Init()
+    {
+        base.Init();
+        additionnalVelocity = Vector2.zero;    
+    }
 
     public void ApplyForce(Vector2 force)
     {
@@ -24,8 +30,9 @@ public class PhysicalEntities : MonoBehaviour
         additionnalVelocity = Vector2.zero;
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
+        base.Update();
         //Arrêt : la vélocity est récalculé à chaque instant. On veux donc repartir de 0 à chaque fois.
         moveVelocity = Vector2.zero;
     }

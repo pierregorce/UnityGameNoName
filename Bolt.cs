@@ -13,9 +13,9 @@ public class Bolt : Projectile
 
     }
 
-    void Update()
-    {
+    //void Update()
+    //{
 
-    }
+    //}
   
 }

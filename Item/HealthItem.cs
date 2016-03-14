@@ -28,7 +28,11 @@ public class HealthItem : MonoBehaviour
 
             for (int i = 0; i < Random.Range(3, 6); i++)
             {
-                Instantiate(particles, transform.position, Quaternion.identity);
+                //Instantiate(particles, transform.position, Quaternion.identity);
+
+                GameObject g = ObjectPool.instance.GetPooledObject(particles);
+                g.GetComponent<Particle>().Init();
+                g.transform.position = transform.position;
             }
 
         }

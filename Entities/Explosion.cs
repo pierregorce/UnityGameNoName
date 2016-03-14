@@ -11,7 +11,7 @@ public class ColorChance
     public int chance;
 }
 
-public class Explosion : MonoBehaviour
+public class Explosion : MonoBehaviourExtended
 {
     private List<string> triggers = new List<string>() {
         "Type1", "Type2", "Type3"
@@ -23,8 +23,9 @@ public class Explosion : MonoBehaviour
     [Header("Spécifications")]
     public ColorChance[] colors;
 
-    void Start()
+    public override void Init()
     {
+        base.Init();
         Animator animator = GetComponent<Animator>();
 
         // Select a explosion animation
@@ -57,7 +58,8 @@ public class Explosion : MonoBehaviour
 
 
         //Destroy it
-        Destroy(gameObject, 3f);
+        Disable(3f);
+        //Destroy(gameObject, 3f);
 
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using Assets.Scripts.Utils;
 using System.Linq;
 
-public class Projectile : MonoBehaviour
+public class Projectile : PhysicalEntities
 {
     public int bumpForce = 3;
     public int damage = 5;
@@ -11,14 +11,11 @@ public class Projectile : MonoBehaviour
     [HideInInspector]
     public GameObject sender;
 
-    void Start()
+    public override void Init()
     {
-        Destroy(gameObject, 5f);
-    }
-
-    void Update()
-    {
-
+        base.Init();
+        Disable(3);
+        //Destroy(gameObject, 5f);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -33,15 +30,16 @@ public class Projectile : MonoBehaviour
 
         // Mortality
         Mortality mortality = other.GetComponent<Mortality>();
-        PhysicalEntities physics = other.GetComponent<PhysicalEntities>();
 
         if (mortality != null)
         {
+
             if (other.gameObject != sender)
             {
                 // Si projectile AMI
                 if (tag.Equals(TagName.FriendlyProjectiles))
                 {
+                    PhysicalEntities physics = other.GetComponent<PhysicalEntities>();
                     //Ne recherche que les collisions avec les ennemys
                     if (other.tag.Equals(TagName.Enemy))
                     {
@@ -68,6 +66,7 @@ public class Projectile : MonoBehaviour
                     //Ne recherche que les collisions avec les friendly
                     if (other.tag.Equals(TagName.Friendly))
                     {
+                        PhysicalEntities physics = other.GetComponent<PhysicalEntities>();
                         destroy = true;
                         mortality.DecrementHealth(damage);
                         if (physics != null && physics.bumpSensible)
@@ -84,14 +83,19 @@ public class Projectile : MonoBehaviour
         // Destroy
         if (destroy)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             // Explosion
             if (explosion != null)
             {
                 for (int i = 0; i < 3; i++)
                 {
                     Vector3 p = new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f), 0);
-                    Instantiate(explosion, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
+
+                    GameObject g = ObjectPool.instance.GetPooledObject(explosion);
+                    g.GetComponent<Explosion>().Init();
+                    g.transform.position = new Vector2(transform.position.x + p.x, transform.position.y + p.y);
+
+                    //Instantiate(explosion, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
                 }
             }
         }

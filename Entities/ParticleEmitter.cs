@@ -19,6 +19,7 @@ public class ParticleEmitter : MonoBehaviour
 
     void Start()
     {
+
     }
 
     void Update()
@@ -31,8 +32,16 @@ public class ParticleEmitter : MonoBehaviour
             float yPosition = Random.Range(yPositionMin, yPositionMax);
 
             GameObject p = ObjectPool.instance.GetPooledObject(particle);
-            p.SetActive(true);
-            Instantiate(p, new Vector2(transform.position.x + xPosition, transform.position.y + yPosition), Quaternion.identity);
+            if (p.GetComponent<Particle>() != null)
+            {
+                p.GetComponent<Particle>().Init();
+            }
+            if (p.GetComponent<Explosion>() != null)
+            {
+                p.GetComponent<Explosion>().Init();
+            }
+            p.transform.position = new Vector2(transform.position.x + xPosition, transform.position.y + yPosition);
+            //Instantiate(particle, new Vector2(transform.position.x + xPosition, transform.position.y + yPosition), Quaternion.identity);
         }
     }
 }

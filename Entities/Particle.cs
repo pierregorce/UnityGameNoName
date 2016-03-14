@@ -51,8 +51,9 @@ public class Particle : MonoBehaviourExtended
     public float alphaMin = 1f;
     public float alphaMax = 1f;
 
-    void Start()
+    public override void Init()
     {
+        base.Init();
         float x = Random.Range(xForceMin, xForceMax);
         float y = Random.Range(yForceMin, yForceMax);
 
@@ -94,8 +95,9 @@ public class Particle : MonoBehaviourExtended
         bounceVelocity *= 0.50f;
     }
 
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         if (!isBouncing)
         {
             return;

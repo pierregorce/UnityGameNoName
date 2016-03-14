@@ -171,9 +171,14 @@ public class MonsterWalk : MonsterEntity
 
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
-            GameObject hurtedParticle = Instantiate(hurtParticle, transform.position, Quaternion.identity) as GameObject;
-            hurtedParticle.transform.parent = GameObject.Find(GameObjectName.GameManager).transform;
+            //GameObject hurtedParticle = Instantiate(hurtParticle, transform.position, Quaternion.identity) as GameObject;
+            //hurtedParticle.transform.parent = GameObject.Find(GameObjectName.GameManager).transform;
             //todo random spawn
+
+            GameObject g = ObjectPool.instance.GetPooledObject(hurtParticle);
+            g.GetComponent<Particle>().Init();
+            g.transform.position = transform.position;
+
         }
     }
 

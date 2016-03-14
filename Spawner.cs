@@ -83,6 +83,7 @@ public class Spawner : MonoBehaviour
     // add dynamic camera as nuclear thrones
     // add barel explosion dmg
     // add gift when monster die
+    // gros flash blanc (light) lors d'un shoot
 
 
     public void Spawn(LevelData levelData)
@@ -240,7 +241,7 @@ public class Spawner : MonoBehaviour
     public int GetEnnemyTotal(LevelData levelData)
     {
         // todo calcul avec le level
-        return 10;
+        return 1;
     }
 
     public GameObject GetEnnemy(EnnemyType ennemyType)

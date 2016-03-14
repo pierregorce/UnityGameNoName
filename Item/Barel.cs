@@ -24,18 +24,24 @@ public class Barel : MonoBehaviour
         for (int i = 0; i < 20; i++)
         {
             Vector3 p = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-            Instantiate(explosion, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
+
+            GameObject g = ObjectPool.instance.GetPooledObject(explosion);
+            g.GetComponent<Explosion>().Init();
+            g.transform.position = new Vector2(transform.position.x + p.x, transform.position.y + p.y);
+            //Instantiate(explosion, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
         }
 
         for (int i = 0; i < 10; i++)
         {
             Vector3 p = new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
-            Instantiate(smokeParticle, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
+            GameObject g = ObjectPool.instance.GetPooledObject(smokeParticle);
+            g.GetComponent<Particle>().Init();
+            g.transform.position = new Vector2(transform.position.x + p.x, transform.position.y + p.y);
+            //Instantiate(smokeParticle, new Vector2(transform.position.x + p.x, transform.position.y + p.y), Quaternion.identity);
         }
 
         GameObject go = Instantiate(barelAcid, new Vector2(transform.position.x, transform.position.y), Quaternion.identity) as GameObject;
         Destroy(go, acidDuration);
-
 
         Node currentNode = GameManager.instance.GetCurrentGrid().NodeFromWorldPoint(transform.position);
         List<Node> o = GameManager.instance.GetCurrentGrid().Get8Neighbours(currentNode);

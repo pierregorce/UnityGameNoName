@@ -41,7 +41,10 @@ public class PlayerController : PhysicalEntities
     {
         for (int i = 0; i < Random.Range(3, 6); i++)
         {
-            Instantiate(bloodParticle, transform.position, Quaternion.identity);
+            GameObject g = ObjectPool.instance.GetPooledObject(bloodParticle);
+            g.GetComponent<Particle>().Init();
+            g.transform.position = transform.position;
+            //Instantiate(bloodParticle, transform.position, Quaternion.identity);
         }
 
         GetComponent<PlayerStatsController>().LooseLife(value);
@@ -62,7 +65,10 @@ public class PlayerController : PhysicalEntities
 
             for (int i = 0; i < Random.Range(1, 3); i++)
             {
-                Instantiate(speedParticle, transform.position, Quaternion.identity);
+                GameObject g = ObjectPool.instance.GetPooledObject(bloodParticle);
+                g.GetComponent<Particle>().Init();
+                g.transform.position = transform.position;
+                //Instantiate(speedParticle, transform.position, Quaternion.identity);
             }
         }
         yield break;
@@ -104,8 +110,6 @@ public class PlayerController : PhysicalEntities
         }
     }
 
-
-
     public void SpellButtonEvent(string buttonIndex)
     {
         Spell spell;
@@ -144,6 +148,10 @@ public class PlayerController : PhysicalEntities
         {
             SpellButtonEvent("0");
         }
+        if (baseShootHorizontal != 0f || baseShootVertical != 0f )
+        {
+            SpellButtonEvent("0");
+        }
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -169,9 +177,15 @@ public class PlayerController : PhysicalEntities
         Quaternion rotation = Quaternion.Euler(0, 0, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg);
 
         //Send Projectile
-        GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
-        projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
+        GameObject projectile = ObjectPool.instance.GetPooledObject(bolt);
+        projectile.GetComponent<Projectile>().Init();
+        projectile.transform.position = start;
+        projectile.transform.rotation = rotation;
+
+        //GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
+        //projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
         projectile.GetComponent<Projectile>().sender = gameObject;
+        projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 100);
 
         //Camera Shake
         Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.PerlinLevel1);
@@ -188,8 +202,14 @@ public class PlayerController : PhysicalEntities
         {
             Quaternion rotation = Quaternion.AngleAxis(i, Vector3.forward);
             Vector2 direction = rotation * Vector3.right;
-            GameObject projectile = Instantiate(boltNova, transform.position, rotation) as GameObject;
-            projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1200);
+            //GameObject projectile = Instantiate(boltNova, transform.position, rotation) as GameObject;
+
+            GameObject projectile = ObjectPool.instance.GetPooledObject(boltNova);
+            projectile.GetComponent<Projectile>().Init();
+            projectile.transform.position = transform.position;
+            projectile.transform.rotation = rotation;
+            //projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1200);
+            projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 100);
             projectile.GetComponent<Projectile>().sender = gameObject;
         }
     }

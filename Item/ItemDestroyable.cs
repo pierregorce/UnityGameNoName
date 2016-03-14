@@ -30,9 +30,11 @@ public class ItemDestroyable : MonoBehaviour
             float pX = Random.Range(-0.2f, 0.2f);
             float pY = Random.Range(-0.2f, 0.2f);
 
-            GameObject test = ObjectPool.instance.GetPooledObject(particle);
-            test.SetActive(true);
-            GameObject p = Instantiate(test, new Vector3(transform.position.x + pX + 0.5f, transform.position.y + pY + 0.5f, 0), Quaternion.identity) as GameObject;
+            GameObject p = ObjectPool.instance.GetPooledObject(particle);
+
+            p.GetComponent<Particle>().Init();
+            p.transform.position = new Vector3(transform.position.x + pX + 0.5f, transform.position.y + pY + 0.5f, 0);
+            //GameObject p = Instantiate(test, new Vector3(transform.position.x + pX + 0.5f, transform.position.y + pY + 0.5f, 0), Quaternion.identity) as GameObject;
 
             //float s = Random.Range(0.4f, 0.4f);
             //p.transform.localScale = new Vector3(s, s);
