@@ -3,14 +3,14 @@ using System.Collections;
 using Assets.Scripts.Utils;
 using System.Linq;
 
-public class Particle : MonoBehaviourExtended
+public class Particle : PhysicalEntities
 {
     public Sprite[] textures;
 
     [Header("Physics things")]
     [Range(2, 30)]
     public float bounceVelocity = 7;
-    public float linearDrag = 2;
+    //public float linearDrag = 2;
     public bool isBlockMaskSensible = true;
 
     [Header("Bouncing")]
@@ -51,6 +51,8 @@ public class Particle : MonoBehaviourExtended
     public float alphaMin = 1f;
     public float alphaMax = 1f;
 
+    private Vector3? initialScale;
+
     public override void Init()
     {
         base.Init();
@@ -58,14 +60,26 @@ public class Particle : MonoBehaviourExtended
         float y = Random.Range(yForceMin, yForceMax);
 
         float s = Random.Range(scaleMin, scaleMax);
-        transform.localScale = new Vector3(s * transform.localScale.x, s * transform.localScale.y);
+        //initialScale = transform.localScale;
+        //Debug.Log(transform.localScale);
+        if (initialScale == null)
+        {
+            initialScale = transform.localScale;
+        }
+        transform.localScale = new Vector3(s * initialScale.Value.x, s * initialScale.Value.y);
 
-        GetComponent<Rigidbody2D>().drag = linearDrag;
+        //GetComponent<Rigidbody2D>().drag = drag;
+
         if (isTorque)
         {
-            GetComponent<Rigidbody2D>().AddTorque(Random.Range(torqueMin, torqueMax));
+            //GetComponent<Rigidbody2D>().AddTorque(Random.Range(torqueMin, torqueMax));
         }
-        GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
+
+        //GetComponent<Rigidbody2D>().AddForce(new Vector2(x, y));
+
+        ApplyForce(new Vector2(x, y));
+
+
         bounceNumber = Random.Range(reboundMin, reboundMax);
         BounceTimes(bounceNumber);
         GetComponent<SpriteRenderer>().sprite = textures[Random.Range(0, textures.Length)];
@@ -105,7 +119,7 @@ public class Particle : MonoBehaviourExtended
         // if done with bounces, stop
         if (bounceNumber <= 0)
         {
-            GetComponent<Rigidbody2D>().isKinematic = true; //stop forces
+            //GetComponent<Rigidbody2D>().isKinematic = true; //stop forces
             GetComponent<SpriteRenderer>().sortingLayerName = SortingLayerName.A_particleOnGround;
             return;
         }
@@ -146,7 +160,7 @@ public class Particle : MonoBehaviourExtended
 
         if (stopped)
         {
-            GetComponent<Rigidbody2D>().isKinematic = true;
+            //GetComponent<Rigidbody2D>().isKinematic = true;
             //stop forces
             // GetComponent<SpriteRenderer>().sortingLayerName = "ParticlesOnGround";
             // bounceNumber = 0;

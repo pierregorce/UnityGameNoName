@@ -49,7 +49,7 @@ public class Spawner : MonoBehaviour
     public GameObject healthItem;
     public GameObject speedItem;
 
-    private MapGenerator map;
+    private Room room;
 
     //TODO
 
@@ -84,12 +84,13 @@ public class Spawner : MonoBehaviour
     // add barel explosion dmg
     // add gift when monster die
     // gros flash blanc (light) lors d'un shoot
+    // add cloud for ambience
 
 
-    public void Spawn(LevelData levelData)
+    public void Spawn(LevelData levelData, Room room)
     {
         //Pop Monster
-
+        this.room =room;
         int ennemyQuantity = GetEnnemyTotal(levelData);
 
         foreach (var ennemy in levelData.roomMonsters)
@@ -101,7 +102,7 @@ public class Spawner : MonoBehaviour
                 width: new RandomInt(3, 3),
                 height: new RandomInt(3, 3),
                 objectToInstanciate: GetEnnemy(ennemy.monsterType),
-                holder: map.transform,
+                holder: transform,
                 type: Tiles.Floor,
                 marginSize: 0,
                 itemSize: new Vector2(1, 2),
@@ -116,7 +117,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(1, 1),
             height: new RandomInt(1, 1),
             objectToInstanciate: healthItem,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Items,
             marginSize: 0,
             placeByCenter: true
@@ -127,7 +128,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(1, 1),
             height: new RandomInt(1, 1),
             objectToInstanciate: speedItem,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Items,
             marginSize: 0,
             placeByCenter: true
@@ -138,7 +139,7 @@ public class Spawner : MonoBehaviour
         //    width: new RandomInt(3, 3),
         //    height: new RandomInt(4, 4),
         //    objectToInstanciate: totemTall,
-        //    holder: map.transform,
+        //    holder: transform,
         //    type: Tiles.Wall,
         //    itemSize: new Vector2(1, 2)
         //);
@@ -148,7 +149,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(1, 1),
             height: new RandomInt(1, 1),
             objectToInstanciate: jewels,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Items,
             marginSize: 0
         );
@@ -158,7 +159,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(5, 12),
             height: new RandomInt(3, 8),
             objectToInstanciate: box,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall,
             fillWith: true
             );
@@ -168,7 +169,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(3, 5),
             height: new RandomInt(4, 6),
             objectToInstanciate: spike,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall,
             fillWith: true
             );
@@ -178,7 +179,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(3, 3),
             height: new RandomInt(3, 3),
             objectToInstanciate: barel,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall,
             placeByCenter: true
             );
@@ -188,7 +189,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(3, 3),
             height: new RandomInt(3, 3),
             objectToInstanciate: brasero,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall
             );
 
@@ -197,7 +198,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(3, 3),
             height: new RandomInt(3, 3),
             objectToInstanciate: pipe,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall
             );
 
@@ -206,7 +207,7 @@ public class Spawner : MonoBehaviour
             width: new RandomInt(5, 5),
             height: new RandomInt(3, 3),
             objectToInstanciate: totem,
-            holder: map.transform,
+            holder: transform,
             type: Tiles.Wall,
             itemSize: new Vector2(3, 1)
             );
@@ -216,7 +217,7 @@ public class Spawner : MonoBehaviour
         //    width: new RandomInt(3, 3),
         //    height: new RandomInt(3, 3),
         //    objectToInstanciate: monster1,
-        //    holder: map.transform,
+        //    holder: transform,
         //    type: Tiles.Floor
         //    );
 
@@ -225,7 +226,7 @@ public class Spawner : MonoBehaviour
         //    width: new RandomInt(3, 3),
         //    height: new RandomInt(3, 3),
         //    objectToInstanciate: monster2,
-        //    holder: map.transform,
+        //    holder: transform,
         //    type: Tiles.Floor
         //    );
 
@@ -261,12 +262,10 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        map = GameManager.instance.mapGenerator;
     }
 
     void Update()
     {
-
     }
 
     public void PlaceAllObjects(RandomInt quantity, RandomInt width, RandomInt height, GameObject objectToInstanciate, Transform holder, Tiles type,
@@ -292,7 +291,7 @@ public class Spawner : MonoBehaviour
     private void PlaceObject(int width, int height, GameObject objectToInstanciate, Transform holder, Tiles type, Vector2 itemSize, bool fillWith, int marginSize, bool placeByCenter)
     {
         TilesPattern patern = new TilesPattern(width, height, Tiles.Floor);
-        Vector2? paternPosition = map.GetCurrentRoom().FindRandomPattern(patern.pattern);
+        Vector2? paternPosition = room.FindRandomPattern(patern.pattern);
 
         if (paternPosition == null)
         {
@@ -367,7 +366,7 @@ public class Spawner : MonoBehaviour
                     }
                     GameObject o = Instantiate(objectToInstanciate, anchor, Quaternion.identity) as GameObject;
                     o.transform.parent = holder;
-                    map.GetCurrentRoom().AddPatternToMap((int)anchor.x, (int)anchor.y, 1, 1, type);
+                    room.AddPatternToMap((int)anchor.x, (int)anchor.y, 1, 1, type);
                 }
             }
         }
@@ -382,7 +381,7 @@ public class Spawner : MonoBehaviour
             }
             GameObject o = Instantiate(objectToInstanciate, anchor, Quaternion.identity) as GameObject;
             o.transform.parent = holder;
-            map.GetCurrentRoom().AddPatternToMap((int)anchor.x, (int)anchor.y, (int)itemSize.x, (int)itemSize.y, type);
+            room.AddPatternToMap((int)anchor.x, (int)anchor.y, (int)itemSize.x, (int)itemSize.y, type);
         }
 
     }

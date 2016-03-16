@@ -10,13 +10,13 @@ public class MapGenerator : MonoBehaviour
     private string mapHolderName = "GeneratedMap";
 
     [Header("Map Dimension")]
-    [Range(30, 150)]
+    [Range(10, 150)]
     public int widthMin = 80;
-    [Range(30, 150)]
+    [Range(10, 150)]
     public int widthMax = 100;
-    [Range(30, 150)]
+    [Range(10, 150)]
     public int heightMin = 80;
-    [Range(30, 150)]
+    [Range(10, 150)]
     public int heightMax = 100;
     [Range(0, 10)]
     private int roomQuantity = 4;
@@ -33,6 +33,9 @@ public class MapGenerator : MonoBehaviour
     [Header("Decoration")]
     public GameObject torch;
 
+    public GameObject triggerEnterRoom;
+    public GameObject triggerExitRoom;
+    public PhysicsMaterial2D wallMaterial;
 
     public void Generate(LevelData levelData)
     {
@@ -50,9 +53,9 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-
-
     #region "Public Room Utils"
+
+    private int currentRoomIndex = 0;
 
     public Room GetCurrentRoom()
     {
@@ -66,14 +69,15 @@ public class MapGenerator : MonoBehaviour
 
     public int GetCurrentRoomIndex()
     {
+        //Si dans une room
         foreach (var room in rooms)
         {
             if (room.GetRect().Contains(GameManager.instance.player.transform.position))
             {
-                return rooms.IndexOf(room);
+                currentRoomIndex = rooms.IndexOf(room);
             }
         }
-        return -1;
+        return currentRoomIndex;
     }
 
     public Tiles[,] GetCurrentMap()
@@ -93,6 +97,7 @@ public class MapGenerator : MonoBehaviour
     {
         Transform mapHolder = new GameObject(mapHolderName).transform;
         mapHolder.parent = transform;
+
 
         int roomWidth = Random.Range(widthMin, widthMax);
         int roomHeight = Random.Range(heightMin, heightMax);
@@ -133,12 +138,37 @@ public class MapGenerator : MonoBehaviour
         }
 
         GenerateMapMesh();
-        GenerateTorch(new RandomInt(10, 20));
+        GenerateTriggers();
+
+        
 
     }
 
-    private void GenerateTorch(RandomInt randomQuantityBySide)
+    private void GenerateTriggers()
     {
+        foreach (var room in rooms)
+        {
+            Vector2? v = room.FindRandomTile(Tiles.RoomEnter);
+            if (v != null)
+            {
+                GameObject trigger = Instantiate(triggerEnterRoom, v.Value + new Vector2(0.5f, 0.5f), Quaternion.identity) as GameObject;
+                trigger.GetComponent<TileTrigger>().associateRoom = room;
+                trigger.transform.parent = room.container.transform;
+            }
+
+            Vector2? v2 = room.FindRandomTile(Tiles.RoomExit);
+            if (v2 != null)
+            {
+                GameObject trigger = Instantiate(triggerExitRoom, v2.Value + new Vector2(0.5f, 0.5f), Quaternion.identity) as GameObject;
+                trigger.GetComponent<TileTrigger>().associateRoom = room;
+                trigger.transform.parent = room.container.transform;
+            }
+        }
+    }
+
+    public void GenerateTorch(Room room, RandomInt randomQuantityBySide)
+    {
+        //TODO CHANGER 9A POUR QUE 9A SOIT A lentree dans la room plutot 
         GameObject mapHolder = GameObject.Find(mapHolderName);
         List<Vector2> patternPositionsSud = new List<Vector2>();
         List<Vector2> patternPositionsNord = new List<Vector2>();
@@ -149,28 +179,28 @@ public class MapGenerator : MonoBehaviour
         int quantity = randomQuantityBySide.GetRandomInt();
         for (int i = 0; i < quantity; i++)
         {
-            Vector2? patternPositionSud = GetCurrentRoom().FindRandomPattern(TilesPattern.wallSud);
+            Vector2? patternPositionSud = room.FindRandomPattern(TilesPattern.wallSud);
             if (patternPositionSud != null) patternPositionsSud.Add(patternPositionSud.Value);
         }
 
         quantity = randomQuantityBySide.GetRandomInt();
         for (int i = 0; i < quantity; i++)
         {
-            Vector2? patternPositionNord = GetCurrentRoom().FindRandomPattern(TilesPattern.wallNord);
+            Vector2? patternPositionNord = room.FindRandomPattern(TilesPattern.wallNord);
             if (patternPositionNord != null) patternPositionsNord.Add(patternPositionNord.Value);
         }
 
         quantity = randomQuantityBySide.GetRandomInt();
         for (int i = 0; i < quantity; i++)
         {
-            Vector2? patternPositionOuest = GetCurrentRoom().FindRandomPattern(TilesPattern.wallOuest);
+            Vector2? patternPositionOuest = room.FindRandomPattern(TilesPattern.wallOuest);
             if (patternPositionOuest != null) patternPositionsOuest.Add(patternPositionOuest.Value);
         }
 
         quantity = randomQuantityBySide.GetRandomInt();
         for (int i = 0; i < quantity; i++)
         {
-            Vector2? patternPositionEst = GetCurrentRoom().FindRandomPattern(TilesPattern.wallEst);
+            Vector2? patternPositionEst = room.FindRandomPattern(TilesPattern.wallEst);
             if (patternPositionEst != null) patternPositionsEst.Add(patternPositionEst.Value);
         }
 
@@ -234,9 +264,8 @@ public class MapGenerator : MonoBehaviour
 
             //Floor
             GenerateMesh(room.container, map, roomRect.position, Tiles.Floor, TagName.Floor);
-
-            //Add Random Object
-
+            GenerateMesh(room.container, map, roomRect.position, Tiles.RoomEnter, TagName.Floor);
+            GenerateMesh(room.container, map, roomRect.position, Tiles.RoomExit, TagName.Floor);
 
         }
     }
@@ -292,6 +321,7 @@ public class MapGenerator : MonoBehaviour
 
     private void AddColliders(GameObject holder, Tiles[,] map)
     {
+        holder.layer = LayerMask.NameToLayer("WorldCollision");
         for (int x = 0; x < map.GetLength(0); x++)
         {
             for (int y = 0; y < map.GetLength(1); y++)
@@ -304,6 +334,7 @@ public class MapGenerator : MonoBehaviour
                         BoxCollider2D collider = holder.AddComponent<BoxCollider2D>();
                         collider.size = Vector2.one;
                         collider.offset = new Vector2(x + 0.5f, y + 0.5f);
+                        collider.sharedMaterial = wallMaterial;
                     }
                 }
             }
@@ -366,7 +397,7 @@ public class MapGenerator : MonoBehaviour
                 meshPosition = new Vector2(start.x - 1, start.y - mapConnection.GetLength(1));
             }
 
-            GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Wall, TagName.Wall);
+            GameObject connection = GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Wall, TagName.Wall);
             GenerateMesh(roomConnection, mapConnection, meshPosition, Tiles.Floor, TagName.Floor);
 
             // Add colliders
@@ -377,7 +408,7 @@ public class MapGenerator : MonoBehaviour
                 {
                     if (mapConnection[x, y] == Tiles.Wall)
                     {
-                        BoxCollider2D collider = roomConnection.AddComponent<BoxCollider2D>();
+                        BoxCollider2D collider = connection.AddComponent<BoxCollider2D>();
                         collider.size = Vector2.one;
                         collider.offset = new Vector2(x + 0.5f, y + 0.5f);
                     }

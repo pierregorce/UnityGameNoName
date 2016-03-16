@@ -3,8 +3,7 @@ using System.Collections;
 
 public class PhysicalEntities : MonoBehaviourExtended
 {
-
-    [Header("Movement")]
+    [Header("PhysicalEntities")]
     public float moveSpeed = 3.5f;
     public float drag = 20f;
     public bool logMovement = false;
@@ -13,10 +12,18 @@ public class PhysicalEntities : MonoBehaviourExtended
     protected Vector2 additionnalVelocity = Vector2.zero;
     public bool bumpSensible = true;
 
+    private Rigidbody2D rigidBody2D;
+
+    protected override void Start()
+    {
+        base.Start();
+        rigidBody2D = GetComponent<Rigidbody2D>();
+    }
+
     public override void Init()
     {
         base.Init();
-        additionnalVelocity = Vector2.zero;    
+        additionnalVelocity = Vector2.zero;
     }
 
     public void ApplyForce(Vector2 force)
@@ -45,10 +52,21 @@ public class PhysicalEntities : MonoBehaviourExtended
         {
             Debug.Log("Velocity " + moveVelocity + " - Additionnal : " + additionnalVelocity);
         }
-        GetComponent<Rigidbody2D>().velocity = new Vector2(additionnalVelocity.x + moveVelocity.x, additionnalVelocity.y + moveVelocity.y);
 
+        //Keep Direction
         currentDirection = new Vector2(transform.position.x + moveVelocity.x, transform.position.y + moveVelocity.y) - (Vector2)transform.position;
         currentDirection.Normalize();
+
+        Vector2 move = new Vector2(additionnalVelocity.x + moveVelocity.x, additionnalVelocity.y + moveVelocity.y);
+        //Move
+        if (rigidBody2D != null)
+        {
+            rigidBody2D.velocity = move;
+        }
+        else
+        {
+            transform.position += (Vector3) move * 1f * Time.deltaTime;
+        }
     }
 
 }

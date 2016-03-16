@@ -33,10 +33,15 @@ public class Room
     public Coord? exitPoint { get; private set; } //Get utilisé pour pouvoir faire les liaisons.
 
     private int childQuantity = 8;
-    private int margin = Random.Range(10, 20);
+    private int margin = Random.Range(2, 3);
 
     //La map de retour
     private Tiles[,] map;
+
+    /// <summary>
+    /// Si la room est spawn ou non (c'est a dire si l'on à ajouté les torches, items, monsters)...
+    /// </summary>
+    public bool roomSpawned = false;
 
     public Room(Room parent, int width, int height, int childQuantity)
     {
@@ -95,11 +100,11 @@ public class Room
     {
         int padding = Random.Range(3, 5);
 
-        int childMaxWidth = this.width / 3;
-        int childMinWidth = this.width / 6;
-        int childMaxHeight = this.height / 3;
-        int childMinHeight = this.height / 6;
-
+        int childMaxWidth = this.width / (childQuantity/2);
+        int childMinWidth = this.width / childQuantity;
+        int childMaxHeight = this.height / (childQuantity/2);
+        int childMinHeight = this.height / childQuantity;
+        
         //add rooms
         int placed = 0;
         int count = 0;
@@ -336,14 +341,14 @@ public class Room
                 {
                     if (((Coord)startPoint).x == x && ((Coord)startPoint).y == y)
                     {
-                        map[x, y] = Tiles.Special;
+                        map[x, y] = Tiles.RoomEnter;
                     }
                 }
                 if (exitPoint != null)
                 {
                     if (((Coord)exitPoint).x == x && ((Coord)exitPoint).y == y)
                     {
-                        map[x, y] = Tiles.Special;
+                        map[x, y] = Tiles.RoomExit;
                     }
                 }
             }
@@ -463,7 +468,6 @@ public class Room
         return irregularities;
     }
 
-
     /// <summary>
     /// Ajoute des items à la map
     /// </summary>
@@ -502,7 +506,7 @@ public class Room
 
                     if (tileOK)
                     {
-                        tilesOk.Add(new Vector2(i, j));
+                        tilesOk.Add(GetRect().position + new Vector2(i, j));
                     }
 
                 }
@@ -517,6 +521,31 @@ public class Room
             return tilesOk[Random.Range(0, tilesOk.Count)];
         }
 
+    }
+
+    public Vector2? FindRandomTile(Tiles tile)
+    {
+        Tiles[,] map = GetMap();
+        List<Vector2> tilesOk = new List<Vector2>();
+
+        for (int i = 0; i < map.GetLength(0); i++)
+        {
+            for (int j = 0; j < map.GetLength(1); j++)
+            {
+                if (map[i, j] == tile)
+                {
+                    tilesOk.Add(GetRect().position + new Vector2(i, j));
+                }
+            }
+        }
+        if (tilesOk.Count > 0)
+        {
+            return tilesOk[Random.Range(0, tilesOk.Count)];
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Vector2? FindNearEmptyPosition(Vector2 currentPosition, int tilesAround)
@@ -539,7 +568,7 @@ public class Room
                 {
                     if (map[x + i, y + j] == Tiles.Floor)
                     {
-                        tilesOk.Add(new Vector2(x + i, y + j));
+                        tilesOk.Add(GetRect().position + new Vector2(x + i, y + j));
                     }
                 }
             }

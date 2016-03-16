@@ -7,9 +7,10 @@ public enum Tiles
 {
     Floor = 0,
     Wall = 1,
-    Special = 2,
-    Items = 3,
-    UnSet = 4
+    RoomEnter = 2,
+    RoomExit = 3,
+    Items = 4,
+    UnSet = 5
 }
 
 public enum TilesDisposition //Clockwise
@@ -259,6 +260,16 @@ public class MapUtils
     public static string GetTileSpriteName(Tiles[,] map, int x, int y)
     {
         Tiles current = map[x, y];
+
+        if (current == Tiles.RoomEnter)
+        {
+            return "tiles_0";
+        }
+        if (current == Tiles.RoomExit)
+        {
+            return "tiles_0";
+        }
+
         if (current == Tiles.Wall)
         {
             //----------- ANGLES (8)

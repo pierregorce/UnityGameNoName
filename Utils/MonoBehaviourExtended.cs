@@ -10,10 +10,15 @@ public class MonoBehaviourExtended : MonoBehaviour
     //float nextdisableTime = 0;
     //bool setDisable = false;
 
+    protected virtual void Start()
+    {
+
+    }
+
     public virtual void Init()
     {
         gameObject.SetActive(true);
-        gameObject.transform.localScale = Vector2.one;
+        //gameObject.transform.localScale = Vector2.one;
         gameObject.transform.localPosition = Vector2.zero;
         gameObject.transform.localRotation = Quaternion.identity;
     }

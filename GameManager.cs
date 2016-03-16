@@ -30,11 +30,37 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         spawner = GameObject.Find(GameObjectName.Spawner).GetComponent<Spawner>();
-        spawner.Spawn(levelData);
         PlacePlayer();
-        uiManager.ShowInformationUI("START", "ROOM " + mapGenerator.GetCurrentRoomIndex(), "Destroy all ennemies. " + spawner.GetEnnemyRemaining() + " Remaining.");
+        EnterInRoom(mapGenerator.GetCurrentRoom());
+    }
+
+    public void EnterInRoom(Room room)
+    {
+        SpawnRoom(room);
+        uiManager.ShowInformationUI("START", "ROOM " + (mapGenerator.GetCurrentRoomIndex() + 1), "Destroy all ennemies. " + spawner.GetEnnemyRemaining() + " Remaining.");
         uiManager.SetMonsterProgress(spawner.GetEnnemyTotal(levelData), spawner.GetEnnemyRemaining());
-        uiManager.SetRoomProgress(mapGenerator.GetRoomCount(), mapGenerator.GetCurrentRoomIndex());
+        uiManager.SetRoomProgress(mapGenerator.GetRoomCount(), (mapGenerator.GetCurrentRoomIndex() + 1));
+    }
+
+    void SpawnRoom(Room room)
+    {
+        if (!room.roomSpawned)
+        {
+            mapGenerator.GenerateTorch(room, new RandomInt(5, 10));
+            spawner.Spawn(levelData, room);
+            room.roomSpawned = true;
+        }
+    }
+
+
+    void Update()
+    {
+        Debug.Log("Current Room : " + mapGenerator.GetCurrentRoomIndex());
+    }
+
+    public void SpellButtonEvent(string buttonIndex)
+    {
+        player.GetComponent<PlayerController>().SpellButtonEvent(buttonIndex);
     }
 
     private void PlacePlayer()
@@ -59,11 +85,6 @@ public class GameManager : MonoBehaviour
             return new Grid(mapGenerator.GetCurrentMap(), mapGenerator.GetCurrentRoom().GetRect().position);
         }
         return null;
-    }
-
-    void Update()
-    {
-
     }
 
     public void OnDrawGizmos()

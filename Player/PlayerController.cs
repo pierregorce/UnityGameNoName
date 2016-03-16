@@ -23,8 +23,9 @@ public class PlayerController : PhysicalEntities
     private float nextAttackTime;
     public float timeBetweenAttack = 0.3f;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         mortality = GetComponent<Mortality>();
         mortality.initialHealth = 150;
         mortality.Revive();
@@ -185,7 +186,7 @@ public class PlayerController : PhysicalEntities
         //GameObject projectile = Instantiate(bolt, start, rotation) as GameObject;
         //projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1000);
         projectile.GetComponent<Projectile>().sender = gameObject;
-        projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 100);
+        projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 20);
 
         //Camera Shake
         Camera.main.GetComponent<CameraShake>().ShakeThatBooty(CameraShake.ShakeParameters.PerlinLevel1);
@@ -209,7 +210,7 @@ public class PlayerController : PhysicalEntities
             projectile.transform.position = transform.position;
             projectile.transform.rotation = rotation;
             //projectile.GetComponent<Rigidbody2D>().AddForce(direction * 1200);
-            projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 100);
+            projectile.GetComponent<PhysicalEntities>().ApplyForce(direction * 20);
             projectile.GetComponent<Projectile>().sender = gameObject;
         }
     }

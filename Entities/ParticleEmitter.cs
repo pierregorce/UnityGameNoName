@@ -41,7 +41,17 @@ public class ParticleEmitter : MonoBehaviour
                 p.GetComponent<Explosion>().Init();
             }
             p.transform.position = new Vector2(transform.position.x + xPosition, transform.position.y + yPosition);
-            //Instantiate(particle, new Vector2(transform.position.x + xPosition, transform.position.y + yPosition), Quaternion.identity);
+
+            //GameObject p2 = Instantiate(particle, transform.position, Quaternion.identity) as GameObject;
+            //if (p2.GetComponent<Particle>() != null)
+            //{
+            //    p2.GetComponent<Particle>().Init();
+            //}
+            //if (p2.GetComponent<Explosion>() != null)
+            //{
+            //    p2.GetComponent<Explosion>().Init();
+            //}
+            //p2.transform.position = new Vector2(transform.position.x + xPosition, transform.position.y + yPosition);
         }
     }
 }

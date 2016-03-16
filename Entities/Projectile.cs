@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Projectile : PhysicalEntities
 {
+    [Header("Projectile")]
     public int bumpForce = 3;
     public int damage = 5;
     public GameObject explosion;
@@ -15,7 +16,6 @@ public class Projectile : PhysicalEntities
     {
         base.Init();
         Disable(3);
-        //Destroy(gameObject, 5f);
     }
 
     void OnTriggerEnter2D(Collider2D other)
